@@ -1,0 +1,31 @@
+<!-- templates/air_data_filter.html -->
+{% extends './base.html' %}
+{% block title %}Filtrado Datos Aire{% endblock %}
+{% block content %}
+  <h1>Filtrado de Datos de Aire</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label for="point_name">Nombre del punto:</label>
+      <input type="text" name="point_name" required>
+    </div>
+    <div>
+      <label for="standard_1">Estándar PM2.5 (μg/Nm3):</label>
+      <input type="number" name="standard_1" step="0.01" required>
+    </div>
+    <div>
+      <label for="standard_2">Estándar PM10 (μg/Nm3):</label>
+      <input type="number" name="standard_2" step="0.01" required>
+    </div>
+    <div>
+      <label for="output_file_name">Nombre del archivo de salida:</label>
+      <input type="text" name="output_file_name" required>
+    </div>
+    <div>
+      <label for="input_file">Archivo de entrada:</label>
+      <input type="file" name="input_file" required>
+    </div>
+    <button type="submit">Filtrar Datos</button>
+  </form>
+  <a href="{% url 'index' %}">Inicio</a>
+{% endblock %}

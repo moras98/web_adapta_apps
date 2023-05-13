@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    <h1>Menú</h1>
+    <ul>
+        <li><a>Análisis de ruido</a></li>
+        <li><a href="{% url 'filtrado-aire' %}">Filtrado de datos de aire</a></li>
+    </ul>
+{% endblock %}
