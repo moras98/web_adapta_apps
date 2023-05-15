@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 import os
 import pandas as pd
+import openpyxl as xl
 from django.http import HttpResponse
 from airfilter import process
 from django.contrib.auth.models import User
@@ -53,3 +54,9 @@ def login_view(request):
 
     context = {'error_message': error_message}
     return render(request, './servicios_adapta_app/login.html', context)
+
+def noise_processing(request):
+    if request.user.is_authenticated:
+        return
+    else:
+        return redirect('login')
