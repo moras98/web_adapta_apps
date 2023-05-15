@@ -33,7 +33,7 @@ def name_code_and_date(path):
     
     return codigo, date
 
-def create_analysis(csv, mins, ef, save):
+def create_analysis(csv, mins, ef):
     
     #selecting temp_path
     if (mins == 30):
@@ -85,9 +85,9 @@ def create_analysis(csv, mins, ef, save):
         i += 1
 
     if (ef) and ('FO' not in name_code):
-        save = save + name_code + "_Operación_" + date_code + ".xlsx"
+        save = name_code + "_Operación_" + date_code + ".xlsx"
     elif (not ef):
-        save = save + name_code + date_code + ".xlsx"
+        save = name_code + date_code + ".xlsx"
 
-    template.save(save)
-    
+    # template.save(save)
+    return template, save

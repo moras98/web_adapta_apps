@@ -1,0 +1,27 @@
+<!-- templates/air_data_filter.html -->
+{% extends './base.html' %}
+{% block title %}Filtrado Datos Ruido{% endblock %}
+{% block content %}
+  <h1>Filtrado de Datos de Ruido</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label for="mins">Duración total:</label>
+      <input type="number" name="mins" step="1" required>
+    </div>
+    <div>
+        <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
+        <label for="radio_ef_fo">EF/FO</label>
+        <br>
+        <input type="radio" id="radio_tgm" name="opcion" value="tgm">
+        <label for="radio_tgm">TGM</label>
+        <br>
+    </div>
+    <div>
+        <label for="input_file">Datos crudos:</label>
+        <input type="file" name="input_file" required>
+    </div>
+    <button type="submit">Filtrar Datos</button>
+  </form>
+  <a href="{% url 'index' %}">Inicio</a>
+{% endblock %}

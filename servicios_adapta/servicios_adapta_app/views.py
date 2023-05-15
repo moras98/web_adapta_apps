@@ -6,6 +6,7 @@ import openpyxl as xl
 from django.http import HttpResponse
 from airfilter import process
 from django.contrib.auth.models import User
+from ruido.py import create_analysis
 
 # Create your views here.
 def index(request):
@@ -57,6 +58,25 @@ def login_view(request):
 
 def noise_processing(request):
     if request.user.is_authenticated:
-        return
+        if request.method == 'POST':
+            mins = request.POST.get('mins')
+            input_file = request.FILES.get('input_file')
+            radio_value = request.POST.get('opcion')
+            if (radio_value == 'effo'):
+                ef = True
+            elif (radio_value == 'tgm'):
+                ef = False
+            template, excelname = create_analysis(input_file, mins, ef)
+            output_path = os.path(excelname)
+            template.save(output_path)
+            # Generate a response with the output file attached
+            with open(output_path, 'rb') as f:
+                response = HttpResponse(f.read())
+                response['Content-Type'] = 'application/vnd.ms-excel'
+                response['Content-Disposition'] = f'attachment; filename="{excelname}"'
+            os.remove(output_path)
+            return response
+        else:
+            return render(request, './servicios_adapta_app/process_noise.html')       
     else:
         return redirect('login')
