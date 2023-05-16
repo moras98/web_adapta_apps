@@ -8,11 +8,18 @@ from airfilter import process
 from django.contrib.auth.models import User
 from ruido import create_analysis
 from django.conf import settings
+from .models import Medicion, Punto
 
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
         return render(request, './servicios_adapta_app/index.html')
+    else:
+        return(redirect('login'))
+    
+def menuRuido(request):
+    if request.user.is_authenticated:
+        return render(request, './servicios_adapta_app/noise_menu.html')
     else:
         return(redirect('login'))
 
@@ -87,5 +94,62 @@ def noise_processing(request):
             else: return render(request, './servicios_adapta_app/process_noise.html')
         else:
             return render(request, './servicios_adapta_app/process_noise.html')       
+    else:
+        return redirect('login')
+    
+
+def mediciones_view(request):
+    if request.user.is_authenticated:
+        if (request.method == 'POST'):
+            mediciones = Medicion.objects.all()
+            puntos = Punto.objects.all()
+            punto_filtro = request.POST.get('punto_filtro')
+            if punto_filtro:
+                mediciones = mediciones.filter(punto = punto_filtro).order_by('fecha_inicio')
+            
+            data = {
+                'Fecha': [medicion.fecha_inicio for medicion in mediciones],
+                'Punto': [medicion.punto.nombre for medicion in mediciones],
+                'Hora Inicio': [medicion.hora_inicio for medicion in mediciones],
+                'Hora Fin': [medicion.hora_fin for medicion in mediciones],
+                'Duración (min)': [medicion.minutos for medicion in mediciones],
+                'Tiempo de estabilización (min)': [medicion.minuto_estabilizacion for medicion in mediciones],
+                'LA,F,eq (dB)': [medicion.laeq for medicion in mediciones],
+                'LA,F,10 (dB)': [medicion.l10 for medicion in mediciones],
+                'LA,F,90 (dB)': [medicion.l90 for medicion in mediciones],
+                'Estándar (dB)': [medicion.estandard for medicion in mediciones],
+            }
+
+            df = pd.DataFrame(data)
+            excel_file = pd.ExcelWriter('tabla_mediciones.xlsx')
+            df.to_excel(excel_file, sheet_name='Tabla de Mediciones', index=False)
+            excel_file.close()
+
+            
+            with open('tabla_mediciones.xlsx', 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename=tabla_mediciones.xlsx'
+                return response
+            
+           
+            
+        else:
+            mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
+            puntos = Punto.objects.all()
+            
+            context = {'mediciones': mediciones, 'puntos': puntos }
+
+            return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
+    else:
+        return redirect('login')
+    
+def add_medicion(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            input_file = request.FILES.get('archivo_excel')
+            Medicion.agregar_medicion(Medicion,excel_file=input_file)
+            return render(request, './servicios_adapta_app/tabla_mediciones.html')
+        else:
+            return render(request, './servicios_adapta_app/add_medicion.html')
     else:
         return redirect('login')

@@ -1,0 +1,10 @@
+{% extends './base.html' %}
+{% block title %}Ruido{% endblock %}
+{% block content %}
+<div class="menu">
+    <ul class="noise-links">
+        <li><a href="{% url 'filtrado-ruido' %}">Procesar datos de ruido</a></li>
+        <li><a href="{% url 'tabla_mediciones' %}">Tabla estabilización</a></li>
+    </ul>
+</div>
+{% endblock %}

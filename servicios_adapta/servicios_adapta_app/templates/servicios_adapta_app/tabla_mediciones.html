@@ -1,0 +1,58 @@
+{% extends './base.html' %}
+{% block title %}Ruido - Tabla de Mediciones{% endblock %}
+{% block content %}
+<body>
+    <h1>Tabla de Mediciones</h1>
+    <a href="{% url 'agregar-medicion' %}">Agregar Medicion</a>
+    <form method="POST" action="{% url 'tabla_mediciones' %}">
+        {% csrf_token %}
+        <button type="submit">Exportar a Excel</button>
+    </form>
+
+    <form method="GET" action="{% url 'tabla_mediciones' %}">
+        <select name="punto">
+            <option value="">Todos los puntos</option>
+            {% for punto in puntos %}
+                <option value="{{ punto.id }}" {% if punto.id == punto_filtro %}selected{% endif %}>{{ punto.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Punto</th>
+                <th>Hora Inicio</th>
+                <th>Hora Fin</th>
+                <th>Duración (min)</th>
+                <th>Tiempo de estabilización (min)</th>
+                <th>LA,F,eq (dB)</th>
+                <th>LA,F,10 (dB)</th>
+                <th>LA,F,90 (dB)</th>
+                <th>Estándar (dB)</th>
+
+                <!-- Agregar otros encabezados según tus modelos -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for medicion in mediciones %}
+            <tr>
+                <td>{{ medicion.fecha_inicio }}</td>
+                <td>{{ medicion.punto.nombre }}</td>
+                <td>{{ medicion.hora_inicio }}</td>
+                <td>{{ medicion.hora_fin }}</td>
+                <td>{{ medicion.minutos }}</td>
+                <td>{{ medicion.minuto_estabilizacion }}</td>
+                <td>{{ medicion.laeq }}</td>
+                <td>{{ medicion.l10 }}</td>
+                <td>{{ medicion.l90 }}</td>
+                <td>{{ medicion.estandard }}</td>
+                <!-- Agregar otras columnas según tus modelos -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+{% endblock %}

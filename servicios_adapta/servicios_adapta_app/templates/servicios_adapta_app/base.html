@@ -16,15 +16,15 @@
         <!-- Enlaces de navegación -->
         <div class="navbar-links" id="navbarNav">
             <ul class="navbar-links">
-                <li><a href="{% url 'filtrado-ruido' %}">Filtrado de datos de ruido</a></li>
-                <li><a href="{% url 'filtrado-aire' %}">Filtrado de datos de aire</a></li>
+                <li><a href="{% url 'menu-ruido' %}">Ruido</a></li>
+                <li><a href="{% url 'filtrado-aire' %}">Aire</a></li>
             </ul>
         </div>
     
         <!-- Mensaje de bienvenida y nombre de usuario -->
         {% if user.is_authenticated %}
             <p class="navbar-welcome">
-            Bienvenido, {{ user.username }}
+            Bienvenido, {{ user.first_name }}
             </p>
         {% endif %}
         </div>
