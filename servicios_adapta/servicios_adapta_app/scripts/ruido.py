@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import openpyxl as xl
+import os
 
 #import csv
 def csv_df(path):
@@ -33,22 +34,26 @@ def name_code_and_date(path):
     
     return codigo, date
 
-def create_analysis(csv, mins, ef):
+def create_analysis(csv, template_ws,mins, ef):
     
     #selecting temp_path
-    if (mins == 30):
-        temp_path = "./noise_templates/template_30.xlsx"
-    elif (mins == 15):
-        temp_path = "./noise_templates/template_15.xlsx"
-    elif (mins == 60):
-        temp_path = "./noise_templates/template_60.xlsx"
+    # temp_path = None
+    # if (mins == 30):
+    #     temp_path = os.path("./noise_templates/template_30.xlsx")
+    # elif (mins == 15):
+    #     temp_path = os.path("./noise_templates/template_15.xlsx")
+    # elif (mins == 60):
+    #     temp_path = os.path("./noise_templates/template_60.xlsx")
     
-    #loading
-    template = template_excel(temp_path)
-    template_ws = template[template.sheetnames[1]]
+    # if temp_path is not None:
+    #     #     #loading
+    #     template = template_excel(temp_path)
+    #     template_ws = template[template.sheetnames[1]]
+
+    # template_ws = temp[temp.sheetnames[1]]
 
     data = csv_df(csv)
-    name_code, date_code = name_code_and_date(csv)
+    name_code, date_code = name_code_and_date(csv.name)
 
     #columns
     columnas_data = []
@@ -58,7 +63,7 @@ def create_analysis(csv, mins, ef):
     #total time of analysis
     total_mins = int(len(data)/60)
 
-    if (mins < total_mins):
+    if (int(mins) < total_mins):
         total_rows = (mins * 60)
     else:
         total_rows = total_mins * 60
@@ -86,8 +91,10 @@ def create_analysis(csv, mins, ef):
 
     if (ef) and ('FO' not in name_code):
         save = name_code + "_Operación_" + date_code + ".xlsx"
+    elif (ef) and ('FO' in name_code):
+        save = name_code + ".xlsx"
     elif (not ef):
-        save = name_code + date_code + ".xlsx"
+        save = name_code + "_" + date_code + ".xlsx"
 
     # template.save(save)
-    return template, save
+    return template_ws, save

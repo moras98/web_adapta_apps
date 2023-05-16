@@ -10,9 +10,10 @@
       <input type="number" name="mins" step="1" required>
     </div>
     <div>
-        <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
-        <label for="radio_ef_fo">EF/FO</label>
+      <label>Seleccione proyecto:</label>
         <br>
+        <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
+        <label for="radio_ef_fo">GVC_FFCC</label>
         <input type="radio" id="radio_tgm" name="opcion" value="tgm">
         <label for="radio_tgm">TGM</label>
         <br>
@@ -20,6 +21,10 @@
     <div>
         <label for="input_file">Datos crudos:</label>
         <input type="file" name="input_file" required>
+    </div>
+    <div>
+        <label for="template">Plantilla:</label>
+        <input type="file" name="template" required>
     </div>
     <button type="submit">Filtrar Datos</button>
   </form>

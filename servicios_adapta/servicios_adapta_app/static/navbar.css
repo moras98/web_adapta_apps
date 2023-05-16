@@ -1,0 +1,38 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f2f2f2;
+  padding: 10px;
+  flex-direction: row; /* Establece la dirección de izquierda a derecha */
+}
+
+.navbar-logo img {
+  height: 50px;
+}
+
+.navbar-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex; /* Los enlaces se mostrarán en línea */
+}
+
+.navbar-links ul li {
+  margin-right: 10px;
+}
+
+.navbar-links  li a {
+  text-decoration: none;
+  color: #333;
+  background-color: #9292925f;
+
+}
+
+.navbar-links a {
+  padding: 10px;
+}
+
+.navbar-welcome span {
+  font-weight: bold;
+}
