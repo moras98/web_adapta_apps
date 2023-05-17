@@ -15,27 +15,27 @@
 <body>
     <nav>
         <div class="navbar">
-        <!-- Logo de la empresa -->
-        <a class="navbar-logo" href="{% url 'index' %}">
-            <img src="{% static '/logo.png' %}" alt="Logo de la empresa">
-        </a>
-    
-        <!-- Enlaces de navegación -->
-        <div class="navbar-links" id="navbarNav">
-            <ul class="navbar-links">
-                <li><a href="{% url 'menu-ruido' %}">Ruido</a></li>
-                <li><a href="{% url 'filtrado-aire' %}">Aire</a></li>
-            </ul>
-        </div>
-    
-        <!-- Mensaje de bienvenida y nombre de usuario -->
-        {% if user.is_authenticated %}
-        <div class="user-button">
-            <span class="navbar-welcome">
-                Bienvenido, {{ user.first_name }}
-            </span>
-        </div>
-        {% endif %}
+            <!-- Logo de la empresa -->
+            <a class="navbar-logo" href="{% url 'index' %}">
+                <img src="{% static '/logo.png' %}" alt="Logo de la empresa">
+            </a>
+        
+            <!-- Enlaces de navegación -->
+            <div class="navbar-links" id="navbarNav">
+                <ul class="navbar-links">
+                    <li><a href="{% url 'menu-ruido' %}">Ruido</a></li>
+                    <li><a href="{% url 'filtrado-aire' %}">Aire</a></li>
+                </ul>
+            </div>
+        
+            <!-- Mensaje de bienvenida y nombre de usuario -->
+            {% if user.is_authenticated %}
+            <div class="user-button">
+                <span class="navbar-welcome">
+                    Bienvenido, {{ user.first_name }}
+                </span>
+            </div>
+            {% endif %}
         </div>
     </nav>
     {% block content %}
