@@ -2,31 +2,44 @@
 {% extends './base.html' %}
 {% block title %}Filtrado Datos Ruido{% endblock %}
 {% block content %}
-  <h1>Filtrado de Datos de Ruido</h1>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div>
-      <label for="mins">Duración total:</label>
-      <input type="number" name="mins" step="1" required>
-    </div>
-    <div>
-      <label>Seleccione proyecto:</label>
+<div class="container-form">
+  <div class="left">
+    <h1>Filtrado de Datos de Ruido</h1>
+  </div>
+  <div class="right">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div>
+        <label class="title">Duración total</label>
         <br>
-        <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
-        <label for="radio_ef_fo">GVC_FFCC</label>
-        <input type="radio" id="radio_tgm" name="opcion" value="tgm">
-        <label for="radio_tgm">TGM</label>
-        <br>
-    </div>
-    <div>
-        <label for="input_file">Datos crudos:</label>
-        <input type="file" name="input_file" required>
-    </div>
-    <div>
-        <label for="template">Plantilla:</label>
-        <input type="file" name="template" required>
-    </div>
-    <button type="submit">Filtrar Datos</button>
-  </form>
-  <a href="{% url 'index' %}">Inicio</a>
+        <input type="radio" id="radio_mins_15" name="duracion" value="15">
+        <label for="radio_mins_30">15</label>
+        <input type="radio" id="radio_mins_30" name="duracion" value="30">
+        <label for="radio_mins_30">30</label>
+        <input type="radio" id="radio_mins_60" name="duracion" value="60">
+        <label for="radio_mins_60">60</label>
+      </div>
+      <div>
+        <label class="title">Seleccione proyecto:</label>
+          <br>
+          <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
+          <label for="radio_ef_fo">GVC_FFCC</label>
+          <input type="radio" id="radio_tgm" name="opcion" value="tgm">
+          <label for="radio_tgm">TGM</label>
+          <br>
+      </div>
+      <div>
+          <label  for="input_file" class="title">Seleccione Datos crudos</label>
+          <br>
+          <input class="input-button" type="file" name="input_file" required>
+      </div>
+      <div>
+          <label for="template" class="title">Seleccione Plantilla</label>
+          <br>
+          <input class="input-button" type="file" name="template" required>
+      </div>
+      <button type="submit">Filtrar Datos</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

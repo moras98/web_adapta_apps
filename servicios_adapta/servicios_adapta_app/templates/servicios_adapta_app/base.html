@@ -3,13 +3,20 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %} - ADAPTA</title>
     {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'noise_menu.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'form.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'tabla-mediciones.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav>
         <div class="navbar">
         <!-- Logo de la empresa -->
-        <a class="navbar-logo" href="#">
+        <a class="navbar-logo" href="{% url 'index' %}">
             <img src="{% static '/logo.png' %}" alt="Logo de la empresa">
         </a>
     
@@ -23,9 +30,11 @@
     
         <!-- Mensaje de bienvenida y nombre de usuario -->
         {% if user.is_authenticated %}
-            <p class="navbar-welcome">
-            Bienvenido, {{ user.first_name }}
-            </p>
+        <div class="user-button">
+            <span class="navbar-welcome">
+                Bienvenido, {{ user.first_name }}
+            </span>
+        </div>
         {% endif %}
         </div>
     </nav>

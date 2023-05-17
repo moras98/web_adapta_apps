@@ -1,0 +1,73 @@
+.tableForm {
+    background-color: rgba(0, 128, 0, 0.297);
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-section {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color:  rgba(0, 128, 0, 0.514);
+}
+
+.top-section h1 {
+    width: 100%;
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.sub-section {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sub-section form {
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: none;
+}
+
+.sub-section a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    background-color: green;
+    border-radius: 12px;
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
+    padding: 10px;
+}
+
+
+.table-section {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-section table {
+    margin-top: 15px;
+}
+
+.table-section table, td, th {
+    text-align: center;
+    border-collapse: collapse;
+    border: 2px solid white;
+}
+
+.table-section table {
+    border: 5px solid white;
+}
+
+.table-section td, th {
+    padding: 5px;
+}

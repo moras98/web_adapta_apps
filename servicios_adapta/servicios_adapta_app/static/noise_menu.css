@@ -1,0 +1,30 @@
+.menu {
+    width: 300px; /* Ancho del rectángulo */
+    margin: 0 auto; /* Centrar horizontalmente */
+    padding: 0px; /* Espacio interno */
+    background-color: rgba(0, 128, 0, 0.514);
+    border-radius: 12px;
+  }
+  
+  .noise-links {
+    list-style-type: none; /* Eliminar viñetas de la lista */
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background-color: transparent;
+  }
+  
+  .noise-links li {
+    margin: 50px; /* Espacio entre los enlaces */
+    padding: 10px;
+    background-color: green;
+    border-radius: 12px;
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
+  }
+
+  .noise-links a {
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+  }
+

@@ -68,7 +68,7 @@ def login_view(request):
 def noise_processing(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            mins = int(request.POST.get('mins'))
+            mins = int(request.POST.get('duracion'))
             input_file = request.FILES.get('input_file')
             radio_value = request.POST.get('opcion')
             if (radio_value == 'effo'):
