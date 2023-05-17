@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from ruido import create_analysis
 from django.conf import settings
 from .models import Medicion, Punto
+from datetime import datetime
 
 # Create your views here.
 def index(request):
@@ -121,6 +122,12 @@ def mediciones_view(request):
             }
 
             df = pd.DataFrame(data)
+            df['Fecha'] = pd.to_datetime(df['Fecha']).dt.date
+            df['Hora Inicio'] =pd.to_datetime(df['Hora Inicio'], format="%H:%M:%S").dt.strftime("%H:%M")
+            df['Hora Fin'] =pd.to_datetime(df['Hora Fin'], format="%H:%M:%S").dt.strftime("%H:%M")
+            df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
+            df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
+            df['LA,F,90 (dB)'] = df['LA,F,90 (dB)'].round(1)
             excel_file = pd.ExcelWriter('tabla_mediciones.xlsx')
             df.to_excel(excel_file, sheet_name='Tabla de Mediciones', index=False)
             excel_file.close()
@@ -136,6 +143,9 @@ def mediciones_view(request):
         else:
             mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
+            punto_filtro = request.GET.get('punto_filtro')
+            if punto_filtro:
+                mediciones = mediciones.filter(punto = punto_filtro)
             
             context = {'mediciones': mediciones, 'puntos': puntos }
 

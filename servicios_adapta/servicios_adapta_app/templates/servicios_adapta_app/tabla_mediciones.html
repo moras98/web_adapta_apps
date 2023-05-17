@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load humanize %}
 {% block title %}Ruido - Tabla de Mediciones{% endblock %}
 {% block content %}
 <body>
@@ -39,15 +40,15 @@
         <tbody>
             {% for medicion in mediciones %}
             <tr>
-                <td>{{ medicion.fecha_inicio }}</td>
+                <td>{{ medicion.fecha_inicio|date:"d/m/Y" }}</td>
                 <td>{{ medicion.punto.nombre }}</td>
                 <td>{{ medicion.hora_inicio }}</td>
                 <td>{{ medicion.hora_fin }}</td>
                 <td>{{ medicion.minutos }}</td>
                 <td>{{ medicion.minuto_estabilizacion }}</td>
-                <td>{{ medicion.laeq }}</td>
-                <td>{{ medicion.l10 }}</td>
-                <td>{{ medicion.l90 }}</td>
+                <td>{{ medicion.laeq|floatformat:1 }}</td>
+                <td>{{ medicion.l10|floatformat:1 }}</td>
+                <td>{{ medicion.l90|floatformat:1 }}</td>
                 <td>{{ medicion.estandard }}</td>
                 <!-- Agregar otras columnas según tus modelos -->
             </tr>
