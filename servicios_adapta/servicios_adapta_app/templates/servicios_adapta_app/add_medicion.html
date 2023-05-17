@@ -1,15 +1,20 @@
 {% extends './base.html' %}
 {% block title %}Ruido - Agregar Medicion{% endblock %}
 {% block content %}
-<body>
-    <h1>Cargar Excel de Mediciones</h1>
-
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="archivo_excel" accept=".xlsx">
-        <button type="submit">Cargar</button>
-    </form>
-
-    <a href="{% url 'tabla_mediciones' %}">Atrás</a>
-</body>
+<div class="container">
+    <div class="left">
+        <h1>Cargar Excel de Mediciones</h1>
+    </div>
+    <div class="right">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label class="title">Planilla de análisis</label>
+            <br>
+            <input type="file" name="archivo_excel" accept=".xlsx">
+            <br>
+            <br>
+            <button type="submit">Cargar</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
