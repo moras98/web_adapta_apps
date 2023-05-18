@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['http://agustinadapta.pythonanywhere.com/',
                  '127.0.0.1',
-                 'https://agustinadapta.pythonanywhere.com/',
+                 'agustinadapta.pythonanywhere.com',
                 ]
 
 
