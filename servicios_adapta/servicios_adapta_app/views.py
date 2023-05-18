@@ -106,7 +106,7 @@ def mediciones_view(request):
             puntos = Punto.objects.all()
             punto_filtro = request.POST.get('punto_filtro')
             if punto_filtro:
-                mediciones = mediciones.filter(punto = punto_filtro).order_by('fecha_inicio')
+                mediciones = mediciones.filter(punto = punto_filtro).order_by('-fecha_inicio')
             
             data = {
                 'Fecha': [medicion.fecha_inicio for medicion in mediciones],
@@ -141,7 +141,7 @@ def mediciones_view(request):
            
             
         else:
-            mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
+            mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
             punto_filtro = request.GET.get('punto_filtro')
             if punto_filtro:
