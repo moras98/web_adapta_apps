@@ -72,7 +72,7 @@ def create_analysis(csv, template_ws,mins, ef):
 
     #convert to dateTime else error
     data["Fecha"] = pd.to_datetime(data["Fecha"], dayfirst=True)
-    data["Tiempo"] = pd.to_datetime(data["Tiempo"], format="mixed")
+    data["Tiempo"] = pd.to_datetime(data["Tiempo"])
 
     #inserting data at excel worksheet
     template_ws["A2"].value = data[columnas_data[0]][0]
