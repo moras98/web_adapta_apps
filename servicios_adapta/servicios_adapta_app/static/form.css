@@ -10,7 +10,9 @@
     display: flex;
     justify-content: center; /* Centrar horizontalmente */
     align-items: center;
+    flex-direction: column;
 }
+
 
 .right {
     width: 50%;

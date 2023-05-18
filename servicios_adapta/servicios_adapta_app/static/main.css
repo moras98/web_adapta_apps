@@ -15,3 +15,17 @@ body {
     background-color: rgba(0, 128, 0, 0.297);
     height: 100vh;
   }
+
+.info {
+    padding: 20px;
+    color: white;
+    width: 75%;
+    background-color: rgba(0, 128, 0, 0.514);
+    border-radius: 12px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.info {
+    margin-top: 10px;
+}
