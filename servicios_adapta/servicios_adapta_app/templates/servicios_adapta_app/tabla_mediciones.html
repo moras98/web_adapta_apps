@@ -17,7 +17,6 @@
                 <label for="fecha_filtro">Fecha:</label>
                 <input type="date" id="fecha_filtro" name="fecha_filtro" value="{{ fecha_filtro }}">
                 <button type="submit">Filtrar</button>
-                <label>(No funciona)</label>
             </form>
             <a href="{% url 'agregar-medicion' %}">Agregar Medicion</a>
             <form method="POST" action="{% url 'tabla_mediciones' %}">
