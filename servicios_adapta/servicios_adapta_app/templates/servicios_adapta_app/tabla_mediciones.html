@@ -7,12 +7,15 @@
         <h1>Tabla de Mediciones</h1>
         <div class="sub-section">
             <form method="GET" action="{% url 'tabla_mediciones' %}">
+                <label for="punto">Punto:</label>
                 <select name="punto">
                     <option value="">Todos los puntos</option>
                     {% for punto in puntos %}
                         <option value="{{ punto.id }}" {% if punto.id == punto_filtro %}selected{% endif %}>{{ punto.nombre }}</option>
                     {% endfor %}
                 </select>
+                <label for="fecha_filtro">Fecha:</label>
+                <input type="date" id="fecha_filtro" name="fecha_filtro" value="{{ fecha_filtro }}">
                 <button type="submit">Filtrar</button>
                 <label>(No funciona)</label>
             </form>

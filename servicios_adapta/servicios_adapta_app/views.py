@@ -104,13 +104,18 @@ def noise_processing(request):
 def mediciones_view(request):
     if request.user.is_authenticated:
         punto_filtro = request.session.get('punto_filtro', None)
+        fecha_filtro = request.GET.get('fecha_filtro')
+
         if request.method == 'POST':
             punto_filtro = request.session['punto_filtro']
+            fecha_filtro = request.session['fecha_filtro']
             mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
-            print(punto_filtro)
             
             if punto_filtro:
                 mediciones = mediciones.filter(punto_id=punto_filtro)
+            
+            if fecha_filtro:
+                mediciones = mediciones.filter(fecha_inicio=fecha_filtro)
                 
 
             # Generar el archivo Excel solo si hay mediciones filtradas
@@ -141,6 +146,7 @@ def mediciones_view(request):
                 excel_file.close()
 
                 request.session['punto_filtro'] = punto_filtro
+                request.session['fecha_filtro'] = fecha_filtro
 
                 with open('tabla_mediciones.xlsx', 'rb') as f:
                     response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -150,12 +156,18 @@ def mediciones_view(request):
             mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
             punto_filtro = request.GET.get('punto')
+            fecha_filtro = request.GET.get('fecha_filtro')
+
             if punto_filtro:
                 mediciones = mediciones.filter(punto = punto_filtro)
             
-            request.session['punto_filtro'] = punto_filtro
+            if fecha_filtro:
+                mediciones = mediciones.filter(fecha_inicio=fecha_filtro)
             
-            context = {'mediciones': mediciones, 'puntos': puntos, 'punto_filtro': punto_filtro }
+            request.session['punto_filtro'] = punto_filtro
+            request.session['fecha_filtro'] = fecha_filtro
+            
+            context = {'mediciones': mediciones, 'puntos': puntos, 'punto_filtro': punto_filtro, 'fecha_filtro': fecha_filtro }
 
             return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
     else:
