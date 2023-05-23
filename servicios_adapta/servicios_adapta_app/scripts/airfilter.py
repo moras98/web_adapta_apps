@@ -23,7 +23,10 @@ def filer_data(df):
     else: return df
     
 def day_means(df):
-    new_df = df.drop(['TimeStamp', 'Date', 'Comments'], axis=1)
+    if ('Comments' in df.columns):
+     new_df = df.drop(['TimeStamp', 'Date', 'Comments'], axis=1)
+    else:
+         new_df = df.drop(['TimeStamp', 'Date'], axis=1)
     new_df = new_df.mean(axis=0)
     new_df['Date'] = df['Date'].iloc[0]
     return new_df
@@ -31,9 +34,9 @@ def day_means(df):
 def vector_mean(df):
     if(len(df) >= 216):
         total = len(df)
-        rad_arr = np.radians(df['Wind Direction (degrees)'])
-        sin_arr = np.sin(rad_arr)
-        cos_arr = np.cos(rad_arr)
+        rad_arr = np.radians(df['Wind Direction (degrees)']) #pasa de grados a radianes todos los valores
+        sin_arr = np.sin(rad_arr) #aplica la función sin a todos los valores en rad_arr
+        cos_arr = np.cos(rad_arr) #aplica la función cos a todos los valores en rad_arr
         u = (1/total)*np.sum(sin_arr)
         v = (1/total)*np.sum(cos_arr)
 

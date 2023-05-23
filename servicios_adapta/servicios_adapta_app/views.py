@@ -10,6 +10,7 @@ from ruido import create_analysis
 from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
+from django.contrib.sessions.models import Session
 
 # Create your views here.
 def index(request):
@@ -67,6 +68,7 @@ def login_view(request):
 
 def noise_processing(request):
     if request.user.is_authenticated:
+
         if request.method == 'POST':
             mins = int(request.POST.get('duracion'))
             input_file = request.FILES.get('input_file')
@@ -101,53 +103,59 @@ def noise_processing(request):
 
 def mediciones_view(request):
     if request.user.is_authenticated:
-        if (request.method == 'POST'):
-            mediciones = Medicion.objects.all()
-            puntos = Punto.objects.all()
-            punto_filtro = request.POST.get('punto_filtro')
+        punto_filtro = request.session.get('punto_filtro', None)
+        if request.method == 'POST':
+            punto_filtro = request.session['punto_filtro']
+            mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
+            print(punto_filtro)
+            
             if punto_filtro:
-                mediciones = mediciones.filter(punto = punto_filtro).order_by('-fecha_inicio')
-            
-            data = {
-                'Fecha': [medicion.fecha_inicio for medicion in mediciones],
-                'Punto': [medicion.punto.nombre for medicion in mediciones],
-                'Hora Inicio': [medicion.hora_inicio for medicion in mediciones],
-                'Hora Fin': [medicion.hora_fin for medicion in mediciones],
-                'Duración (min)': [medicion.minutos for medicion in mediciones],
-                'Tiempo de estabilización (min)': [medicion.minuto_estabilizacion for medicion in mediciones],
-                'LA,F,eq (dB)': [medicion.laeq for medicion in mediciones],
-                'LA,F,10 (dB)': [medicion.l10 for medicion in mediciones],
-                'LA,F,90 (dB)': [medicion.l90 for medicion in mediciones],
-                'Estándar (dB)': [medicion.estandard for medicion in mediciones],
-            }
+                mediciones = mediciones.filter(punto_id=punto_filtro)
+                
 
-            df = pd.DataFrame(data)
-            df['Fecha'] = pd.to_datetime(df['Fecha']).dt.date
-            df['Hora Inicio'] =pd.to_datetime(df['Hora Inicio'], format="%H:%M:%S").dt.strftime("%H:%M")
-            df['Hora Fin'] =pd.to_datetime(df['Hora Fin'], format="%H:%M:%S").dt.strftime("%H:%M")
-            df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
-            df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
-            df['LA,F,90 (dB)'] = df['LA,F,90 (dB)'].round(1)
-            excel_file = pd.ExcelWriter('tabla_mediciones.xlsx')
-            df.to_excel(excel_file, sheet_name='Tabla de Mediciones', index=False)
-            excel_file.close()
+            # Generar el archivo Excel solo si hay mediciones filtradas
+            if mediciones.exists():
+                data = {
+                    'Fecha': [medicion.fecha_inicio for medicion in mediciones],
+                    'Punto': [medicion.punto.nombre for medicion in mediciones],
+                    'Hora Inicio': [medicion.hora_inicio for medicion in mediciones],
+                    'Hora Fin': [medicion.hora_fin for medicion in mediciones],
+                    'Duración (min)': [medicion.minutos for medicion in mediciones],
+                    'Tiempo de estabilización (min)': [medicion.minuto_estabilizacion for medicion in mediciones],
+                    'LA,F,eq (dB)': [medicion.laeq for medicion in mediciones],
+                    'LA,F,10 (dB)': [medicion.l10 for medicion in mediciones],
+                    'LA,F,90 (dB)': [medicion.l90 for medicion in mediciones],
+                    'Estándar (dB)': [medicion.estandard for medicion in mediciones],
+                }
 
-            
-            with open('tabla_mediciones.xlsx', 'rb') as f:
-                response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-                response['Content-Disposition'] = 'attachment; filename=tabla_mediciones.xlsx'
-                return response
-            
-           
-            
+                df = pd.DataFrame(data)
+                df['Fecha'] = pd.to_datetime(df['Fecha']).dt.date
+                df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format="%H:%M:%S").dt.strftime("%H:%M")
+                df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format="%H:%M:%S").dt.strftime("%H:%M")
+                df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
+                df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
+                df['LA,F,90 (dB)'] = df['LA,F,90 (dB)'].round(1)
+
+                excel_file = pd.ExcelWriter('tabla_mediciones.xlsx')
+                df.to_excel(excel_file, sheet_name='Tabla de Mediciones', index=False)
+                excel_file.close()
+
+                request.session['punto_filtro'] = punto_filtro
+
+                with open('tabla_mediciones.xlsx', 'rb') as f:
+                    response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                    response['Content-Disposition'] = 'attachment; filename=tabla_mediciones.xlsx'
+                    return response   
         else:
             mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
-            punto_filtro = request.GET.get('punto_filtro')
+            punto_filtro = request.GET.get('punto')
             if punto_filtro:
                 mediciones = mediciones.filter(punto = punto_filtro)
             
-            context = {'mediciones': mediciones, 'puntos': puntos }
+            request.session['punto_filtro'] = punto_filtro
+            
+            context = {'mediciones': mediciones, 'puntos': puntos, 'punto_filtro': punto_filtro }
 
             return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
     else:
