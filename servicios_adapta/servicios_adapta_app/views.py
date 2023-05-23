@@ -153,7 +153,7 @@ def mediciones_view(request):
                     response['Content-Disposition'] = 'attachment; filename=tabla_mediciones.xlsx'
                     return response   
         else:
-            mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
+            mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
             punto_filtro = request.GET.get('punto')
             fecha_filtro = request.GET.get('fecha_filtro')
@@ -178,7 +178,7 @@ def add_medicion(request):
         if request.method == 'POST':
             input_file = request.FILES.get('archivo_excel')
             Medicion.agregar_medicion(Medicion,excel_file=input_file)
-            mediciones = mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
+            mediciones = mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
             puntos = Punto.objects.all()
             context = {'mediciones': mediciones, 'puntos':puntos }
             return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
