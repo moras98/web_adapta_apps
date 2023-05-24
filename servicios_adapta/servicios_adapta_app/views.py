@@ -182,11 +182,12 @@ def mediciones_view(request):
 def add_medicion(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            input_file = request.FILES.get('archivo_excel')
-            Medicion.agregar_medicion(Medicion,excel_file=input_file)
-            mediciones = mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
-            puntos = Punto.objects.all()
-            context = {'mediciones': mediciones, 'puntos':puntos }
+            input_files = request.FILES.getlist('archivo_excel')
+            for input_file in input_files:
+                Medicion.agregar_medicion(Medicion,excel_file=input_file)
+                mediciones = mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
+                puntos = Punto.objects.all()
+                context = {'mediciones': mediciones, 'puntos':puntos }
             return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
         else:
             return render(request, './servicios_adapta_app/add_medicion.html')
