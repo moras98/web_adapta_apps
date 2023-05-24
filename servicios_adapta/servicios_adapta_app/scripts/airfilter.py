@@ -47,6 +47,11 @@ def vector_mean(df):
         else:
             wind_dir = np.arctan(u/v) + 180
         
+        u = np.around(u, 1)
+        print(u)
+        v = np.around(v, 1)
+        wind_dir = np.around(wind_dir, 1)
+
         return u, v, wind_dir
     else:
         return '-', '-', '-'
@@ -67,7 +72,7 @@ def day_row(df):
     for val in columns:
         oredered_df[val] = [day_df[val]]
     
-    return oredered_df
+    return oredered_df.round(1)
 
 def conc_dfs(rows):
     days_df = pd.concat(rows, ignore_index=True)
@@ -101,7 +106,7 @@ def final_df(df, pt, est1, est2):
     new_df[new_columns[9]] = est1
     new_df[new_columns[10]] = est2
     
-    return new_df 
+    return new_df.round(1)
 
 
 def process(file_path, pt, est1, est2):
