@@ -11,6 +11,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
+import zipfile
 
 # Create your views here.
 def index(request):
@@ -71,28 +72,44 @@ def noise_processing(request):
 
         if request.method == 'POST':
             mins = int(request.POST.get('duracion'))
-            input_file = request.FILES.get('input_file')
+            input_files = request.FILES.getlist('input_file')
             radio_value = request.POST.get('opcion')
             if (radio_value == 'effo'):
                 ef = True
             elif (radio_value == 'tgm'):
                 ef = False
 
-            temp_path = request.FILES.get('template')
+            if mins == 60:
+                temp_path = 'excel_templates/plantilla60.xlsx'
+            if mins == 30:
+                temp_path = 'excel_templates/plantilla30.xlsx'
+            if mins == 15:
+                temp_path = 'excel_templates/plantilla15.xlsx'
+            # temp_path = request.FILES.get('template')
             
             if(temp_path is not None):
                 template = xl.load_workbook(temp_path)
                 template_ws = template[template.sheetnames[1]]
 
-                template_ws, excelname = create_analysis(input_file, template_ws ,mins, ef)
-                output_path = os.path.join(""+excelname)
-                template.save(output_path)
-                # Generate a response with the output file attached
-                with open(output_path, 'rb') as f:
+                zip_filename = 'resultados.zip'
+                output_zip = zipfile.ZipFile(zip_filename, 'w')
+
+                for input_file in input_files:
+                    template_ws, excelname = create_analysis(input_file, template_ws, mins, ef)
+                    output_path = os.path.join("", excelname)
+                    template.save(output_path)
+                    output_zip.write(output_path, excelname)
+                    os.remove(output_path)
+
+                output_zip.close()
+
+                # Generate a response with the ZIP file attached
+                with open(zip_filename, 'rb') as f:
                     response = HttpResponse(f.read())
-                    response['Content-Type'] = 'application/vnd.ms-excel'
-                    response['Content-Disposition'] = f'attachment; filename="{excelname}"'
-                os.remove(output_path)
+                    response['Content-Type'] = 'application/zip'
+                    response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+
+                os.remove(zip_filename)
                 return response
             else: return render(request, './servicios_adapta_app/process_noise.html')
         else:

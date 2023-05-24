@@ -9,7 +9,6 @@
       <label class="title">Instrucciones</label>
       <p>Asegurarse que el archivo de datos crudos de formato csv en su interior contenga los valores separados por "," y no por ";". Para corroborar esto el archivo debe ser abierto con el bloc de notas.<br>
         El formato del nombre del archivo que contiene los datos crudos debe ser en caso de pertenecer al proyecto "GVC_FFCC" como "EC01_ABR23.csv" y "P_ABR23_FO_4,535.csv". Se debe respetar siempre las mayúsculas de cómo figura el código del punto en el archivo de resultados en el caso de ser una estructura fija. Por otro lado, si el punto pertenece al proyecto "TGM" el archivo debe seguir el siguiente formato "R1_20230422.csv" donde la segunda parte del nombre es la fecha de la forma "AAAAMMDD".<br>
-        Al momento de seleccionar la plantilla, asegurarse de que corresponda a la cantidad de minutos que dura la medición ya que los cálculos son ligeramente diferentes en cada una.<br>
         Una vez completado el formulario y haber presionado el botón "Procesar", esperar a que se descargue el archivo sin realizar ninguna otra acción, esto puede demorar algunos segundos.<br>
         Luego de haberse descargado el archivo Excel, es importante que sea abierto, habilitar la edición del mismo y guardarlo , en lo contrario, los cálculos no surtiran efecto y este archivo no puede ser utilizado en otras funciones de la web.
       </p>
@@ -40,13 +39,13 @@
       <div>
           <label  for="input_file" class="title">Seleccione Datos crudos</label>
           <br>
-          <input class="input-button" type="file" name="input_file" accept=".csv" required>
+          <input class="input-button" type="file" name="input_file" accept=".csv" multiple required>
       </div>
-      <div>
+      <!-- <div>
           <label for="template" class="title">Seleccione Plantilla</label>
           <br>
           <input class="input-button" type="file" name="template" accept=".xlsx" required>
-      </div>
+      </div> -->
       <button type="submit">Procesar Datos</button>
     </form>
   </div>
