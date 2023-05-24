@@ -1,7 +1,7 @@
 .menu {
     width: 300px; /* Ancho del rectángulo */
     margin: 0 auto; /* Centrar horizontalmente */
-    padding: 0px; /* Espacio interno */
+    padding: 20px; /* Espacio interno */
     background-color: rgba(0, 128, 0, 0.514);
     border-radius: 12px;
   }
@@ -14,17 +14,23 @@
     background-color: transparent;
   }
   
-  .noise-links li {
-    margin: 50px; /* Espacio entre los enlaces */
+  .noise-links a {
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    width: 200px;
+    margin: 25px; /* Espacio entre los enlaces */
     padding: 10px;
     background-color: green;
     border-radius: 12px;
     box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
+    color: white;
+    transition: background-color .2s;
   }
 
-  .noise-links a {
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
+  .noise-links a:hover {
+    background-color: white;
+    color: black;
   }
+
 

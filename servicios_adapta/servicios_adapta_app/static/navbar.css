@@ -32,7 +32,7 @@
   width: 100%;
 }
 
-.navbar-links  li {
+.navbar-links  a {
   background-color: green;
   border-radius: 12px;
   box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
@@ -44,15 +44,22 @@
   color: black;
 }
 
-.navbar-links  li:hover {
-  background-color: black;
-}
+/* .navbar-links  li:hover {
+  background-color: white;
+} */
 
 .navbar-links a {
-  height: 100%;
-  width: 100%;
+  display: inline-block;
+  height: 50%;
+  width: 100px;
   text-decoration: none;
   color: white;
+  transition: background-color .2s;
+}
+
+.navbar-links a:hover {
+  background-color: white;
+  color: black;
 }
 
 
