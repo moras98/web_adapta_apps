@@ -25,8 +25,17 @@
 .sub-section {
     width: 90%;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 20px;
+}
+
+.sub-section form,
+.sub-section a,
+.sub-section button {
+    flex: 1;
+    text-align: center;
 }
 
 .sub-section form {
@@ -43,6 +52,13 @@
     border-radius: 12px;
     box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
     padding: 10px;
+    transition: background-color .2s;
+}
+
+.sub-section a:hover {
+    color: black;
+    background-color: white;
+    border: solid black 1px;
 }
 
 
