@@ -91,7 +91,7 @@ def noise_processing(request):
                 template = xl.load_workbook(temp_path)
                 template_ws = template[template.sheetnames[1]]
 
-                zip_filename = 'resultados.zip'
+                zip_filename = 'analisis_de_datos.zip'
                 output_zip = zipfile.ZipFile(zip_filename, 'w')
 
                 for input_file in input_files:
