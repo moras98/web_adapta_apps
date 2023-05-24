@@ -39,8 +39,7 @@
                     <th>LA,F,10 (dB)</th>
                     <th>LA,F,90 (dB)</th>
                     <th>Estándar (dB)</th>
-    
-                    <!-- Agregar otros encabezados según tus modelos -->
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,7 +55,12 @@
                     <td>{{ medicion.l10|floatformat:1 }}</td>
                     <td>{{ medicion.l90|floatformat:1 }}</td>
                     <td>{{ medicion.estandard }}</td>
-                    <!-- Agregar otras columnas según tus modelos -->
+                    <td>
+                        <form method="POST" action="{% url 'borrar_medicion' medicion.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Borrar</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -8,5 +8,6 @@ urlpatterns = [
     path('filtrado/', views.noise_processing, name='filtrado-ruido'),
     path('tabla-mediciones/', views.mediciones_view, name='tabla_mediciones'),
     path('agregar-mediciones/', views.add_medicion, name='agregar-medicion'),
+    path('medicion/borrar/<int:medicion_id>/', views.borrar_medicion, name='borrar_medicion'),
     path('login/',views.login_view, name='login'),
 ]

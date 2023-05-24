@@ -192,3 +192,14 @@ def add_medicion(request):
             return render(request, './servicios_adapta_app/add_medicion.html')
     else:
         return redirect('login')
+    
+def borrar_medicion(request, medicion_id):
+    if request.method == 'POST':
+        # Obtener la instancia de la medición a borrar
+        try:
+            medicion = Medicion.objects.get(id=medicion_id)
+            medicion.delete()
+        except Medicion.DoesNotExist:
+            # Manejar el caso cuando la medición no existe
+            pass
+    return redirect('tabla_mediciones')
