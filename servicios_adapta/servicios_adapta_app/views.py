@@ -106,6 +106,9 @@ def mediciones_view(request):
         punto_filtro = request.session.get('punto_filtro', None)
         fecha_filtro = request.GET.get('fecha_filtro')
 
+        # if fecha_filtro:
+        #     fecha_filtro = datetime.strptime(fecha_filtro, "%Y-%m").strftime("%Y-%m")
+
         if request.method == 'POST':
             punto_filtro = request.session['punto_filtro']
             fecha_filtro = request.session['fecha_filtro']
@@ -115,8 +118,9 @@ def mediciones_view(request):
                 mediciones = mediciones.filter(punto_id=punto_filtro)
             
             if fecha_filtro:
-                mediciones = mediciones.filter(fecha_inicio=fecha_filtro)
-                
+                fecha_filtro = datetime.strptime(fecha_filtro, "%Y-%m")
+                mediciones = mediciones.filter(fecha_inicio__year=fecha_filtro.year, fecha_inicio__month=fecha_filtro.month)
+                fecha_filtro = fecha_filtro.strftime("%Y-%m")
 
             # Generar el archivo Excel solo si hay mediciones filtradas
             if mediciones.exists():
@@ -162,7 +166,9 @@ def mediciones_view(request):
                 mediciones = mediciones.filter(punto = punto_filtro)
             
             if fecha_filtro:
-                mediciones = mediciones.filter(fecha_inicio=fecha_filtro)
+                fecha_filtro = datetime.strptime(fecha_filtro, "%Y-%m")
+                mediciones = mediciones.filter(fecha_inicio__year=fecha_filtro.year, fecha_inicio__month=fecha_filtro.month)
+                fecha_filtro = fecha_filtro.strftime("%Y-%m")
             
             request.session['punto_filtro'] = punto_filtro
             request.session['fecha_filtro'] = fecha_filtro

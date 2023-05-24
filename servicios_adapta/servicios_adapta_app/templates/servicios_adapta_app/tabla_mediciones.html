@@ -15,7 +15,7 @@
                     {% endfor %}
                 </select>
                 <label for="fecha_filtro">Fecha:</label>
-                <input type="date" id="fecha_filtro" name="fecha_filtro" value="{{ fecha_filtro }}">
+                <input type="month" id="fecha_filtro" name="fecha_filtro" value="{{ fecha_filtro|date:'Y-m' }}">
                 <button type="submit">Filtrar</button>
             </form>
             <a href="{% url 'agregar-medicion' %}">Agregar Medicion</a>
