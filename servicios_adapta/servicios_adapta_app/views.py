@@ -81,9 +81,9 @@ def noise_processing(request):
 
             if mins == 60:
                 temp_path = 'excel_templates/plantilla60.xlsx'
-            if mins == 30:
+            elif mins == 30:
                 temp_path = 'excel_templates/plantilla30.xlsx'
-            if mins == 15:
+            elif mins == 15:
                 temp_path = 'excel_templates/plantilla15.xlsx'
             # temp_path = request.FILES.get('template')
             
