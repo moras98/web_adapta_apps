@@ -5,6 +5,7 @@ import pandas as pd
 import openpyxl as xl
 from django.http import HttpResponse
 from airfilter import process
+from results_ef_fo import pasar_resultados_effo
 from django.contrib.auth.models import User
 from ruido import create_analysis
 from django.conf import settings
@@ -221,3 +222,37 @@ def borrar_medicion(request, medicion_id):
             # Manejar el caso cuando la medición no existe
             pass
     return redirect('tabla_mediciones')
+
+
+def resultados_effo(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            input_files = request.FILES.getlist('input_files')
+
+            zip_filename = 'resultados_effo.zip'
+            output_zip = zipfile.ZipFile(zip_filename, 'w')
+
+            results_ef, results_fo = pasar_resultados_effo(input_files)
+            output_path1 = os.path.join("", 'GVC_FCC_R_NPS_EF_MMM_AAAA.xlsx')
+            output_path2 = os.path.join("", 'GVC_FCC_R_NPS_FO_MMM_AAAA.xlsx')
+            results_ef.save(output_path1)
+            results_fo.save(output_path2)
+
+            output_zip.write(output_path1, 'GVC_FCC_R_NPS_EF_MMM_AAAA.xlsx')
+            output_zip.write(output_path2, 'GVC_FCC_R_NPS_FO_MMM_AAAA.xlsx')
+            os.remove(output_path1)
+            os.remove(output_path2)
+            output_zip.close()
+            
+            # Generate a response with the ZIP file attached
+            with open(zip_filename, 'rb') as f:
+                response = HttpResponse(f.read())
+                response['Content-Type'] = 'application/zip'
+                response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+
+            os.remove(zip_filename)
+            return response
+        else:
+            return render(request, './servicios_adapta_app/resultados_effo.html')
+    else:
+        return redirect('login')

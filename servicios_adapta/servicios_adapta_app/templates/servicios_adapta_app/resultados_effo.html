@@ -1,0 +1,24 @@
+{% extends './base.html' %}
+{% block title %}Resultados GVCFCC{% endblock %}
+{% block content %}
+<div class="container-form">
+    <div class="left">
+        <h1>Resultados GVC_FCC</h1>
+        <div class="info">
+            <label class="title">Instrucciones</label>
+            <p></p>
+        </div>
+    </div>
+    <div class="right">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label  for="input_file" class="title">Seleccione Datos crudos</label>
+                <br>
+                <input class="input-button" type="file" name="input_files" accept=".xlsx" multiple required>
+            </div>
+            <button type="submit">Procesar Datos</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
