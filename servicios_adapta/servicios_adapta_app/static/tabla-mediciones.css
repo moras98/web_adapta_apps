@@ -71,6 +71,8 @@
 
 .table-section table {
     margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .table-section table, td, th {

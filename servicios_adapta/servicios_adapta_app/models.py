@@ -27,6 +27,13 @@ class Medicion(models.Model):
     minuto_estabilizacion = models.IntegerField()
     laeq = models.FloatField()
     l10 = models.FloatField()
+    l20 = models.FloatField()
+    l30 = models.FloatField()
+    l40 = models.FloatField()
+    l50 = models.FloatField()
+    l60 = models.FloatField()
+    l70 = models.FloatField()
+    l80 = models.FloatField()
     l90 = models.FloatField()
     estandard = models.FloatField()
 
@@ -50,6 +57,13 @@ class Medicion(models.Model):
         minutos = worksheet['I3'].value
         laeq = worksheet['I5'].value
         l10 = worksheet2['C3'].value
+        l20 = worksheet2['D3'].value
+        l30 = worksheet2['E3'].value
+        l40 = worksheet2['F3'].value
+        l50 = worksheet2['G3'].value
+        l60 = worksheet2['H3'].value
+        l70 = worksheet2['I3'].value
+        l80 = worksheet2['J3'].value
         l90 = worksheet2['K3'].value
         estandard = 75
 
@@ -69,6 +83,13 @@ class Medicion(models.Model):
                 minuto_estabilizacion = minuto_estabilizacion,
                 laeq = laeq,
                 l10 = l10,
+                l20 = l20,
+                l30 = l30,
+                l40 = l40,
+                l50 = l50,
+                l60 = l60,
+                l70 = l70,
+                l80 = l80,
                 l90 = l90,
                 estandard = estandard,
             )

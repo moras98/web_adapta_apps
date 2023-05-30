@@ -151,6 +151,13 @@ def mediciones_view(request):
                     'Tiempo de estabilización (min)': [medicion.minuto_estabilizacion for medicion in mediciones],
                     'LA,F,eq (dB)': [medicion.laeq for medicion in mediciones],
                     'LA,F,10 (dB)': [medicion.l10 for medicion in mediciones],
+                    'LA,F,20 (dB)': [medicion.l20 for medicion in mediciones],
+                    'LA,F,30 (dB)': [medicion.l30 for medicion in mediciones],
+                    'LA,F,40 (dB)': [medicion.l40 for medicion in mediciones],
+                    'LA,F,50 (dB)': [medicion.l50 for medicion in mediciones],
+                    'LA,F,60 (dB)': [medicion.l60 for medicion in mediciones],
+                    'LA,F,70 (dB)': [medicion.l70 for medicion in mediciones],
+                    'LA,F,80 (dB)': [medicion.l80 for medicion in mediciones],
                     'LA,F,90 (dB)': [medicion.l90 for medicion in mediciones],
                     'Estándar (dB)': [medicion.estandard for medicion in mediciones],
                 }
@@ -161,6 +168,13 @@ def mediciones_view(request):
                 df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format="%H:%M:%S").dt.strftime("%H:%M")
                 df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
                 df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
+                df['LA,F,20 (dB)'] = df['LA,F,20 (dB)'].round(1)
+                df['LA,F,30 (dB)'] = df['LA,F,30 (dB)'].round(1)
+                df['LA,F,40 (dB)'] = df['LA,F,40 (dB)'].round(1)
+                df['LA,F,50 (dB)'] = df['LA,F,50 (dB)'].round(1)
+                df['LA,F,60 (dB)'] = df['LA,F,60 (dB)'].round(1)
+                df['LA,F,70 (dB)'] = df['LA,F,70 (dB)'].round(1)
+                df['LA,F,80 (dB)'] = df['LA,F,80 (dB)'].round(1)
                 df['LA,F,90 (dB)'] = df['LA,F,90 (dB)'].round(1)
 
                 excel_file = pd.ExcelWriter('tabla_mediciones.xlsx')
