@@ -14,13 +14,26 @@ def arr_df_days(df):
     arr = [group[1] for group in df.groupby(['Date'])]
     return arr
 
-def filer_data(df):
+def filter_conditions(df):
     num = len(df[(df['Humidity (% RH)'] > 85) & (df['Wind Speed (mtr/sec)'] < 0.5) & (df['Temperature (Celsius)'] < 8)])
     if num > 0:
         filtered_df = df.drop(df[(df['Humidity (% RH)'] > 85) & (df['Wind Speed (mtr/sec)'] < 0.5) & (df['Temperature (Celsius)'] < 8)].index)
         filtered_df = filtered_df.reset_index(drop=True)
         return filtered_df
     else: return df
+
+def filter_foggy(df):
+    num = len(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4)] & (df['PM10 particles (ug/m^3)'] > 150))
+    if num > 0:
+        filtered_df = df.drop(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4)] & (df['PM10 particles (ug/m^3)'] > 150).index)
+        filtered_df = filtered_df.reset_index(drop=True)
+        return filtered_df
+    else: return df
+
+def filer_data(df):
+    df = filter_conditions(df)
+    df = filter_foggy(df)
+    return df
     
 def day_means(df):
     if ('Comments' in df.columns):
