@@ -238,7 +238,7 @@ def borrar_medicion(request, medicion_id):
     return redirect('tabla_mediciones')
 
 
-def resultados_effo(request):
+def resultadoseffo(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             input_files = request.FILES.getlist('input_files')
