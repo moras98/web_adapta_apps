@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.conf import settings
 import os
 import pandas as pd
 import openpyxl as xl
@@ -83,9 +84,10 @@ def noise_processing(request):
             if mins == 60:
                 temp_path = 'excel_templates/plantilla60.xlsx'
             elif mins == 30:
-                temp_path = 'excel_templates/plantilla30.xlsx'
+                temp_path = settings.EXCEL_TEMPLATES_30
             elif mins == 15:
-                temp_path = 'excel_templates/plantilla15.xlsx'
+                # temp_path = 'excel_templates/plantilla15.xlsx'
+                temp_path = settings.EXCEL_TEMPLATES_15
             # temp_path = request.FILES.get('template')
             
             if(temp_path is not None):
@@ -206,7 +208,7 @@ def mediciones_view(request):
             request.session['fecha_filtro'] = fecha_filtro
             
             context = {'mediciones': mediciones, 'puntos': puntos, 'punto_filtro': punto_filtro, 'fecha_filtro': fecha_filtro }
-
+            
             return render(request, './servicios_adapta_app/tabla_mediciones.html', context)
     else:
         return redirect('login')

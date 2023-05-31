@@ -17,9 +17,10 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(os.path.join(BASE_DIR, "servicios_adapta_app/scripts"))
-# ruta_template_30 =  BASE_DIR / 'servicios_adapta_app/scripts/noise_templates/template_30.xlsx'
-# ruta_template_15 =  BASE_DIR / 'servicios_adapta_app/scripts/noise_templates/template_15.xlsx'
-# ruta_template_60 =  BASE_DIR / 'servicios_adapta_app/scripts/noise_templates/template_60.xlsx'
+EXCEL_TEMPLATES_15 = os.path.join(BASE_DIR, 'excel_templates', 'plantilla15.xlsx')
+EXCEL_TEMPLATES_30 = os.path.join(BASE_DIR, 'excel_templates', 'plantilla30.xlsx')
+RESULTADOS_EF = os.path.join(BASE_DIR, 'excel_templates', 'GVC_FCC_R_NPS_EF_MMM_AAAA.xlsx')
+RESULTADOS_FO = os.path.join(BASE_DIR, 'excel_templates', 'GVC_FCC_R_NPS_FO_MMM_AAAA.xlsx')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/

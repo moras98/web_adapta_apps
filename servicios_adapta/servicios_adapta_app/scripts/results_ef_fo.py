@@ -1,7 +1,7 @@
 import pandas as pd
 import openpyxl as xl
 import numpy as np
-
+from django.conf import settings
 
 #detectar si el archivo es ef o fo
 def file_class(file):
@@ -75,9 +75,9 @@ def resultados_fos(fo, ws, index):
 
 #todos los procesos juntos
 def pasar_resultados_effo(files):
-    file_efs_wb = xl.load_workbook('excel_templates/GVC_FCC_R_NPS_EF_MMM_AAAA.xlsx')
+    file_efs_wb = xl.load_workbook(settings.RESULTADOS_EF)
     file_efs_ws = file_efs_wb[file_efs_wb.sheetnames[0]]
-    file_fos_wb = xl.load_workbook('excel_templates/GVC_FCC_R_NPS_FO_MMM_AAAA.xlsx')
+    file_fos_wb = xl.load_workbook(settings.RESULTADOS_FO)
     file_fos_ws = file_fos_wb[file_fos_wb.sheetnames[0]]
     
     fos = []
