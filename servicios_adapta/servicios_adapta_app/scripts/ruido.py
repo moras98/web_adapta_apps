@@ -2,10 +2,22 @@ import pandas as pd
 import numpy as np
 import openpyxl as xl
 import os
+import csv
 
 #import csv
+# def csv_df(path):
+#     df = pd.read_csv(path)
+#     return df
+
 def csv_df(path):
-    df = pd.read_csv(path)
+    df = pd.read_csv(path, header=None)
+    nombres_columnas = df.iloc[0]
+    if nombres_columnas[0] == 'Fecha':
+        df.columns = nombres_columnas
+        df = df[1:]
+    else:
+        nombres_columnas = ['Fecha', 'Tiempo', 'Laeq']
+        df.columns = nombres_columnas
     return df
 
 #load template excel
@@ -53,13 +65,14 @@ def create_analysis(csv, template_ws,mins, ef):
     # template_ws = temp[temp.sheetnames[1]]
 
     data = csv_df(csv)
+    print(data.head())
     name_code, date_code = name_code_and_date(csv.name)
 
     #columns
     columnas_data = []
     for col in data.columns:
         columnas_data.append(col)
-
+    
     #total time of analysis
     total_mins = int(len(data)/60)
 
