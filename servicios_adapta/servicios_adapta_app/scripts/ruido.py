@@ -14,7 +14,7 @@ def csv_df(path):
     nombres_columnas = df.iloc[0]
     if nombres_columnas[0] == 'Fecha':
         df.columns = nombres_columnas
-        df = df[1:]
+        df = df[1:].reset_index()
     else:
         nombres_columnas = ['Fecha', 'Tiempo', 'Laeq']
         df.columns = nombres_columnas
@@ -65,7 +65,6 @@ def create_analysis(csv, template_ws,mins, ef):
     # template_ws = temp[temp.sheetnames[1]]
 
     data = csv_df(csv)
-    print(data.head())
     name_code, date_code = name_code_and_date(csv.name)
 
     #columns
