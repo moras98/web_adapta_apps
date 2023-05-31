@@ -46,7 +46,8 @@ class Medicion(models.Model):
         worksheet2 = workbook[workbook.sheetnames[2]]
 
         fecha_inicio = worksheet['A2'].value
-        fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
+        if (isinstance(fecha_inicio, str)):
+            fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
         punto_nombre = worksheet['D2'].value
         if '0' in punto_nombre:
             punto_nombre = punto_nombre.replace('0', '')
