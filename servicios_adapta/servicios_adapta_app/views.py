@@ -132,7 +132,7 @@ def mediciones_view(request):
         if request.method == 'POST':
             punto_filtro = request.session['punto_filtro']
             fecha_filtro = request.session['fecha_filtro']
-            mediciones = Medicion.objects.all().order_by('-fecha_inicio', 'punto__id')
+            mediciones = Medicion.objects.all().order_by('fecha_inicio', 'punto__id')
             
             if punto_filtro:
                 mediciones = mediciones.filter(punto_id=punto_filtro)
@@ -165,9 +165,12 @@ def mediciones_view(request):
                 }
 
                 df = pd.DataFrame(data)
+                df['Fecha'] = df['Fecha'].astype(str)
                 df['Fecha'] = pd.to_datetime(df['Fecha']).dt.date
-                df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format="%H:%M:%S").dt.strftime("%H:%M")
-                df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format="%H:%M:%S").dt.strftime("%H:%M")
+                df['Hora Inicio'] = df['Hora Inicio'].astype(str)
+                df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
+                df['Hora Fin'] = df['Hora Fin'].astype(str)
+                df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
                 df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
                 df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
                 df['LA,F,20 (dB)'] = df['LA,F,20 (dB)'].round(1)

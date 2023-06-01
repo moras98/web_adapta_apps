@@ -38,7 +38,7 @@ class Medicion(models.Model):
     estandard = models.FloatField()
 
     def __str__(self):
-        return f"Medicion - Fecha: {self.fecha_inicio}, Punto: {self.punto.name}"
+        return f"Medicion - Fecha: {self.fecha_inicio}, Punto: {self.punto.nombre}"
 
     def agregar_medicion(cls, excel_file):
         workbook = xl.load_workbook(excel_file, read_only=True, data_only=True)
