@@ -168,9 +168,15 @@ def mediciones_view(request):
                 df['Fecha'] = df['Fecha'].astype(str)
                 df['Fecha'] = pd.to_datetime(df['Fecha']).dt.date
                 df['Hora Inicio'] = df['Hora Inicio'].astype(str)
-                df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
+                df['Hora Inicio'] = df['Hora Inicio'].apply(eliminarFracciones)
+                df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format='%H:%M:%S')
+                df['Hora Inicio'] = df['Hora Inicio'].apply(lambda x: x.strftime('%H:%M') if pd.notnull(x) else '')
+                #df['Hora Inicio'] = pd.to_datetime(df['Hora Inicio'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
                 df['Hora Fin'] = df['Hora Fin'].astype(str)
-                df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
+                df['Hora Fin'] = df['Hora Fin'].apply(eliminarFracciones)
+                #df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format='mixed', dayfirst=True).dt.strftime("%H:%M")
+                df['Hora Fin'] = pd.to_datetime(df['Hora Fin'], format='%H:%M:%S')
+                df['Hora Fin'] = df['Hora Fin'].apply(lambda x: x.strftime('%H:%M') if pd.notnull(x) else '')
                 df['LA,F,eq (dB)'] = df['LA,F,eq (dB)'].round(1)
                 df['LA,F,10 (dB)'] = df['LA,F,10 (dB)'].round(1)
                 df['LA,F,20 (dB)'] = df['LA,F,20 (dB)'].round(1)
@@ -275,3 +281,18 @@ def resultadosEFFO(request):
             return render(request, './servicios_adapta_app/resultados_effo.html')
     else:
         return redirect('login')
+    
+
+
+def eliminarFracciones(tiempo):
+    # Dividir el tiempo en partes (horas, minutos, segundos)
+    partes = tiempo.split(':')
+    
+    # Eliminar las fracciones si están presentes
+    partes_segundos = partes[2].split('.')
+    partes[2] = partes_segundos[0]  # Mantener solo los segundos
+    
+    # Unir las partes nuevamente en un formato de tiempo
+    tiempo_sin_fracciones = ':'.join(partes)
+    
+    return tiempo_sin_fracciones
