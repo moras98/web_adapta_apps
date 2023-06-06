@@ -9,8 +9,21 @@ import csv
 #     df = pd.read_csv(path)
 #     return df
 
+def detectar_separador_csv(archivo_csv):
+    with open(archivo_csv, 'r') as f:
+        dialecto = csv.Sniffer().sniff(f.read(1024))
+        return dialecto.delimiter
+
 def csv_df(path):
-    df = pd.read_csv(path, header=None)
+    ruta_temporal = 'archivo.csv'
+    with open(ruta_temporal, 'wb') as archivo_temporal:
+        for chunk in path.chunks():
+            archivo_temporal.write(chunk)
+
+
+    separador = detectar_separador_csv(ruta_temporal)
+    print(separador)
+    df = pd.read_csv(ruta_temporal, header=None, sep=separador)
     nombres_columnas = df.iloc[0]
     if nombres_columnas[0] == 'Fecha':
         df.columns = nombres_columnas
@@ -19,6 +32,8 @@ def csv_df(path):
     else:
         nombres_columnas = ['Fecha', 'Tiempo', 'Laeq']
         df.columns = nombres_columnas
+
+    os.remove(ruta_temporal)
     return df
 
 #load template excel
@@ -87,6 +102,7 @@ def create_analysis(csv, template_ws,mins, ef):
     #convert to dateTime else error
     data["Fecha"] = pd.to_datetime(data["Fecha"], dayfirst=True)
     data["Tiempo"] = pd.to_datetime(data["Tiempo"])
+    data["Tiempo"] = data["Tiempo"].dt.time
 
     #inserting data at excel worksheet
     template_ws["A2"].value = data[columnas_data[0]][0]
