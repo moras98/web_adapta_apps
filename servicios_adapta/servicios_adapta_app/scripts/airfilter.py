@@ -23,15 +23,16 @@ def filter_conditions(df):
     else: return df
 
 def filter_foggy(df):
-    num = len(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4)] & (df['PM10 particles (ug/m^3)'] > 150))
+    num = len(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4) & (df['PM10 particles (ug/m^3)'] > 150)])
     if num > 0:
-        filtered_df = df.drop(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4)] & (df['PM10 particles (ug/m^3)'] > 150).index)
+        filtered_df = df.drop(df[(df['Humidity (% RH)'] > 95) & (df['Wind Speed (mtr/sec)'] < 4) & (df['PM10 particles (ug/m^3)'] > 150)].index)
         filtered_df = filtered_df.reset_index(drop=True)
         return filtered_df
     else: return df
 
 def filer_data(df):
     df = filter_conditions(df)
+    print('Voy a foggy')
     df = filter_foggy(df)
     return df
     
@@ -61,7 +62,6 @@ def vector_mean(df):
             wind_dir = np.arctan(u/v) + 180
         
         u = np.around(u, 1)
-        print(u)
         v = np.around(v, 1)
         wind_dir = np.around(wind_dir, 1)
 
@@ -124,6 +124,7 @@ def final_df(df, pt, est1, est2):
 
 def process(file_path, pt, est1, est2):
     df = df_from_file(file_path)
+    df = filer_data(df)
     arr = arr_df_days(df)
     rows_arr = [day_row(row) for row in arr]
     month_df = conc_dfs(rows_arr)
