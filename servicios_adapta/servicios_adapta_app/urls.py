@@ -10,5 +10,6 @@ urlpatterns = [
     path('ruido/tabla-mediciones/', views.mediciones_view, name='tabla_mediciones'),
     path('ruido/tabla-mediciones/agregar-mediciones/', views.add_medicion, name='agregar-medicion'),
     path('medicion/borrar/<int:medicion_id>/', views.borrar_medicion, name='borrar_medicion'),
+    path('experiencia/', views.menuExperiencia, name='menu-experiencia'),
     path('login/',views.login_view, name='login'),
 ]

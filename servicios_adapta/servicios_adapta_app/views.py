@@ -27,6 +27,12 @@ def menuRuido(request):
         return render(request, './servicios_adapta_app/noise_menu.html')
     else:
         return(redirect('login'))
+    
+def menuExperiencia(request):
+    if request.user.is_authenticated:
+        return render(request, './servicios_adapta_app/experiencia_menu.html')
+    else:
+        return(redirect('login'))
 
 def air_data_filter(request):
     if request.user.is_authenticated:
