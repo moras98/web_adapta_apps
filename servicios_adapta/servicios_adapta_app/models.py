@@ -154,7 +154,7 @@ class experiencia_Contrato(models.Model):
         # Agrega aquí más opciones de sector según tus necesidades
     )
     sector = models.CharField(max_length=255, choices=SECTOR_CHOICES)
-    id = models.CharField(max_length=10, unique=True)  # Formato AAMM_XX
+    id = models.CharField(max_length=10, unique=True, primary_key=True)  # Formato AAMM_XX
     proyecto = models.ForeignKey(experiencia_Proyecto, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
