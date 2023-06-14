@@ -96,3 +96,88 @@ class Medicion(models.Model):
             )
             medicion.save()
         else: return
+
+
+class experiencia_Cliente(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class experiencia_Contacto(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    mail = models.EmailField()
+    
+    def __str__(self):
+        return self.name
+    
+class experiencia_Localizacion(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+    
+class experiencia_Categoria(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class experiencia_Proyecto(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    cliente = models.ForeignKey(experiencia_Cliente, on_delete=models.CASCADE)
+    contacto = models.ForeignKey(experiencia_Contacto, on_delete=models.CASCADE)
+    localizaciones = models.ManyToManyField('experiencia_Localizacion')
+    categoria = models.ForeignKey(experiencia_Categoria, on_delete=models.CASCADE)
+    ficha = models.FileField(upload_to='fichas/', null=True, blank=True)
+    comentarios = models.TextField()
+    atestado_hecho = models.BooleanField()
+    atestado_firmado = models.BooleanField()
+
+    def __str__(self):
+        return self.name
+    
+
+class experiencia_Contrato(models.Model):
+    fecha_inicio = models.DateField(null=True, blank=True)  # Mes y año o vacío
+    fecha_fin = models.DateField(null=True, blank=True)  # Mes y año, "en curso", "a la fecha" o vacío
+    SECTOR_CHOICES = (
+        ('sector1', 'Sector 1'),
+        ('sector2', 'Sector 2'),
+        ('sector3', 'Sector 3'),
+        # Agrega aquí más opciones de sector según tus necesidades
+    )
+    sector = models.CharField(max_length=255, choices=SECTOR_CHOICES)
+    id = models.CharField(max_length=10, unique=True)  # Formato AAMM_XX
+    proyecto = models.ForeignKey(experiencia_Proyecto, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Obtener los últimos dos dígitos del año en fecha_inicio
+            if self.fecha_inicio:
+                ultimos_dos_digitos_ano = self.fecha_inicio.strftime("%y")
+            else:
+                ultimos_dos_digitos_ano = ""
+
+            # Obtener los dos dígitos del mes en fecha_inicio
+            if self.fecha_inicio:
+                dos_digitos_mes = self.fecha_inicio.strftime("%m")
+            else:
+                dos_digitos_mes = ""
+
+            # Obtener el último número de contrato para el mes y año especificados
+            contratos_mes_anio = experiencia_Contrato.objects.filter(
+                id__startswith=f"{ultimos_dos_digitos_ano}{dos_digitos_mes}"
+            )
+            ultimo_numero = contratos_mes_anio.count() + 1
+
+            # Crear el ID en formato AAMM_XX
+            self.id = f"{ultimos_dos_digitos_ano}{dos_digitos_mes}_{str(ultimo_numero).zfill(2)}"
+
+        super().save(*args, **kwargs)
