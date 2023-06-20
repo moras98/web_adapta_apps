@@ -101,15 +101,26 @@ class Medicion(models.Model):
 class experienciaRazonSocial(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=150, unique=True)
+    
+    def __str__(self):
+        return self.nombre
+
+class experienciaLocalizaciones(models.Model):
+    departamento = models.CharField(max_length=100, blank=True)
+    pais = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.departamento, self.pais}"
+
 
 class experienciaProyecto(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=300)
     contacto_nombre = models.CharField(max_length=100)
-    contacto_telefono = models.CharField(max_length=20)
-    contacto_mail = models.EmailField()
+    contacto_telefono = models.CharField(max_length=20, blank=True)
+    contacto_mail = models.EmailField(blank=True)
     razon = models.ForeignKey(experienciaRazonSocial, on_delete=models.CASCADE)
-    
+    localizacion = models.ManyToManyField(experienciaLocalizaciones, related_name='proyectos')
     SECTOR_CHOICES = [
         ('agroindustrial', 'Agroindustrial'),
         ('aguapot_sanea', 'Agua potable y saneamiento'),
@@ -129,15 +140,17 @@ class experienciaProyecto(models.Model):
     ]
     sector = models.CharField(max_length=50, choices=SECTOR_CHOICES)
     
+    def __str__(self):
+        return self.nombre
     
 class experienciaContrato(models.Model):
     fechaInicio = models.DateField()
     
-    #fechaFin = models.CharField(max_length=25, default='En Curso')
-    def fecha_fin_default():
-        return 'en curso'
 
-    fechaFin = models.DateField(default=fecha_fin_default, null=True, blank=True)
+    def fecha_fin_default():#si la borro da error
+        pass
+
+    fechaFin = models.CharField(max_length=25, default='En Curso') #Despues se ingresa por el usuario un texto con el formato aaaa-mm-dd
     
     codigo = models.CharField(max_length=8)
     CAT_CHOICES = [
@@ -151,5 +164,8 @@ class experienciaContrato(models.Model):
     catServicios = models.CharField(max_length=50, choices=CAT_CHOICES)
     ficha = models.FileField(null=True, blank=True)
     atestado = models.FileField(null=True, blank=True)
-    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE)
+    proyecto = models.ForeignKey(experienciaProyecto, on_delete=models.CASCADE)
     #roles
+
+    def __str__(self):
+        return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"
