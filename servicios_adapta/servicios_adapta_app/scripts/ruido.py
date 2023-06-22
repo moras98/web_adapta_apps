@@ -43,20 +43,23 @@ def template_excel(path):
     return temp_wb
 
 #name code
-def name_code_and_date(path):
+def name_code_and_date(path , ef):
     if ("\\" in path):
         codigo = path.split("\\")[-1]
     else:
         codigo = path.split("/")[-1]
 
     codigo = codigo.split(".")[0]
-
+    
     #check if name is ef/fo or not
-    if ("FO") not in path:
+    if(ef):
         proyect = ""
-        if ("_") in codigo:
-            date = codigo.split("_")[-1]
-            codigo = codigo.split("_")[0]
+        if ("FO") not in path:
+            if ("_") in codigo:
+                date = codigo.split("_")[-1]
+                codigo = codigo.split("_")[0]
+            else:
+                date = ""
         else:
             date = ""
     else:
@@ -86,7 +89,7 @@ def create_analysis(csv, template_ws,mins, ef):
 
     data = csv_df(csv)
     print(data.head())
-    name_code, date_code, proyect = name_code_and_date(csv.name)
+    name_code, date_code, proyect = name_code_and_date(csv.name, ef)
 
     #columns
     columnas_data = []
@@ -128,7 +131,7 @@ def create_analysis(csv, template_ws,mins, ef):
     elif (ef) and ('FO' in name_code):
         save = name_code + ".xlsx"
     elif (not ef):
-        save = name_code + "_" + date_code + "_" + proyect + "_" + ".xlsx"
+        save = name_code + "_" + date_code + "_" + proyect + "_PRNPS" + ".xlsx"
 
     # template.save(save)
     return template_ws, save
