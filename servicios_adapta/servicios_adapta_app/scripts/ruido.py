@@ -28,6 +28,7 @@ def csv_df(path):
     if nombres_columnas[0] == 'Fecha':
         df.columns = nombres_columnas
         df = df[1:].reset_index(drop=True)
+        df = df.apply(lambda x: x.str.replace(",", "."))
         df[df.columns[2]] = df[df.columns[2]].astype(float)
     else:
         nombres_columnas = ['Fecha', 'Tiempo', 'Laeq']
@@ -52,6 +53,7 @@ def name_code_and_date(path):
 
     #check if name is ef/fo or not
     if ("FO") not in path:
+        proyect = ""
         if ("_") in codigo:
             date = codigo.split("_")[-1]
             codigo = codigo.split("_")[0]
@@ -59,8 +61,10 @@ def name_code_and_date(path):
             date = ""
     else:
         date = codigo.split("_")[1]
+        proyect = codigo.split("_")[2]
+        codigo = codigo.split("_")[0]
     
-    return codigo, date
+    return codigo, date, proyect
 
 def create_analysis(csv, template_ws,mins, ef):
     
@@ -82,7 +86,7 @@ def create_analysis(csv, template_ws,mins, ef):
 
     data = csv_df(csv)
     print(data.head())
-    name_code, date_code = name_code_and_date(csv.name)
+    name_code, date_code, proyect = name_code_and_date(csv.name)
 
     #columns
     columnas_data = []
@@ -124,7 +128,7 @@ def create_analysis(csv, template_ws,mins, ef):
     elif (ef) and ('FO' in name_code):
         save = name_code + ".xlsx"
     elif (not ef):
-        save = name_code + "_" + date_code + ".xlsx"
+        save = name_code + "_" + date_code + "_" + proyect + "_" + ".xlsx"
 
     # template.save(save)
     return template_ws, save

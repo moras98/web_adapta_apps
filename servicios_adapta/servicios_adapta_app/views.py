@@ -84,8 +84,9 @@ def noise_processing(request):
             radio_value = request.POST.get('opcion')
             if (radio_value == 'effo'):
                 ef = True
-            elif (radio_value == 'tgm'):
+            elif (radio_value == 'otro'):
                 ef = False
+            
 
             if mins == 60:
                 temp_path = 'excel_templates/plantilla60.xlsx'
