@@ -98,86 +98,74 @@ class Medicion(models.Model):
         else: return
 
 
-class experiencia_Cliente(models.Model):
+class experienciaRazonSocial(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class experiencia_Contacto(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    mail = models.EmailField()
+    nombre = models.CharField(max_length=150, unique=True)
     
     def __str__(self):
-        return self.name
-    
-class experiencia_Localizacion(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.name
-    
-class experiencia_Categoria(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+        return self.nombre
+
+class experienciaLocalizaciones(models.Model):
+    departamento = models.CharField(max_length=100, blank=True)
+    pais = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return f"{self.departamento, self.pais}"
 
-class experiencia_Proyecto(models.Model):
+
+class experienciaProyecto(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    cliente = models.ForeignKey(experiencia_Cliente, on_delete=models.CASCADE)
-    contacto = models.ForeignKey(experiencia_Contacto, on_delete=models.CASCADE)
-    localizaciones = models.ManyToManyField('experiencia_Localizacion')
-    categoria = models.ForeignKey(experiencia_Categoria, on_delete=models.CASCADE)
-    ficha = models.FileField(upload_to='fichas/', null=True, blank=True)
-    comentarios = models.TextField()
-    atestado_hecho = models.BooleanField()
-    atestado_firmado = models.BooleanField()
-
+    nombre = models.CharField(max_length=300)
+    contacto_nombre = models.CharField(max_length=100)
+    contacto_telefono = models.CharField(max_length=20, blank=True)
+    contacto_mail = models.EmailField(blank=True)
+    razon = models.ForeignKey(experienciaRazonSocial, on_delete=models.CASCADE)
+    localizacion = models.ManyToManyField(experienciaLocalizaciones, related_name='proyectos')
+    SECTOR_CHOICES = [
+        ('agroindustrial', 'Agroindustrial'),
+        ('aguapot_sanea', 'Agua potable y saneamiento'),
+        ('ambiente', 'Ambiente'),
+        ('comercial', 'Comercial'),
+        ('energia', 'Energía'),
+        ('industrial', 'Industrial'),
+        ('infraestruct', 'Infraestructura'),
+        ('logistica', 'Logística'),
+        ('mineria', 'Minería'),
+        ('puertos', 'Puertos'),
+        ('recursosH', 'Recursos Hídricos'),
+        ('recursosS', 'Recursos Solidos'),
+        ('salud', 'Salud'),
+        ('servicios', 'Servicios'),
+        ('telecom', 'Telecomunicaciones'),
+    ]
+    sector = models.CharField(max_length=50, choices=SECTOR_CHOICES)
+    
     def __str__(self):
-        return self.name
+        return self.nombre
+    
+class experienciaContrato(models.Model):
+    fechaInicio = models.DateField()
     
 
-class experiencia_Contrato(models.Model):
-    fecha_inicio = models.DateField(null=True, blank=True)  # Mes y año o vacío
-    fecha_fin = models.DateField(null=True, blank=True)  # Mes y año, "en curso", "a la fecha" o vacío
-    SECTOR_CHOICES = (
-        ('sector1', 'Sector 1'),
-        ('sector2', 'Sector 2'),
-        ('sector3', 'Sector 3'),
-        # Agrega aquí más opciones de sector según tus necesidades
-    )
-    sector = models.CharField(max_length=255, choices=SECTOR_CHOICES)
-    id = models.CharField(max_length=10, unique=True)  # Formato AAMM_XX
-    proyecto = models.ForeignKey(experiencia_Proyecto, on_delete=models.CASCADE)
+    def fecha_fin_default():#si la borro da error
+        pass
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            # Obtener los últimos dos dígitos del año en fecha_inicio
-            if self.fecha_inicio:
-                ultimos_dos_digitos_ano = self.fecha_inicio.strftime("%y")
-            else:
-                ultimos_dos_digitos_ano = ""
+    fechaFin = models.CharField(max_length=25, default='En Curso') #Despues se ingresa por el usuario un texto con el formato aaaa-mm-dd
+    
+    codigo = models.CharField(max_length=8)
+    CAT_CHOICES = [
+        ('categoria1', 'Categoria 1'),
+        ('categoria2', 'Categoria 2'),
+        ('categoria3', 'Categoria 3'),
+        ('categoria4', 'Categoria 4'),
+        ('categoria5', 'Categoria 5'),
+        ('categoria6', 'Categoria 6'),
+    ]
+    catServicios = models.CharField(max_length=50, choices=CAT_CHOICES)
+    ficha = models.FileField(null=True, blank=True)
+    atestado = models.FileField(null=True, blank=True)
+    proyecto = models.ForeignKey(experienciaProyecto, on_delete=models.CASCADE)
+    #roles
 
-            # Obtener los dos dígitos del mes en fecha_inicio
-            if self.fecha_inicio:
-                dos_digitos_mes = self.fecha_inicio.strftime("%m")
-            else:
-                dos_digitos_mes = ""
-
-            # Obtener el último número de contrato para el mes y año especificados
-            contratos_mes_anio = experiencia_Contrato.objects.filter(
-                id__startswith=f"{ultimos_dos_digitos_ano}{dos_digitos_mes}"
-            )
-            ultimo_numero = contratos_mes_anio.count() + 1
-
-            # Crear el ID en formato AAMM_XX
-            self.id = f"{ultimos_dos_digitos_ano}{dos_digitos_mes}_{str(ultimo_numero).zfill(2)}"
-
-        super().save(*args, **kwargs)
+    def __str__(self):
+        return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"

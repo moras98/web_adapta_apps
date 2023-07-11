@@ -7,7 +7,7 @@
     <h1>Procesado de Datos de Ruido</h1>
     <div class="info">
       <label class="title">Instrucciones</label>
-      <p>El formato del nombre del archivo que contiene los datos crudos debe ser en caso de pertenecer al proyecto "GVC_FFCC" como "EC01_ABR23.csv" y "P_ABR23_FO_4,535.csv". Se debe respetar siempre las mayúsculas de cómo figura el código del punto en el archivo de resultados en el caso de ser una estructura fija. Por otro lado, si el punto pertenece al proyecto "TGM" el archivo debe seguir el siguiente formato "R1_20230422.csv" donde la segunda parte del nombre es la fecha de la forma "AAAAMMDD".<br>
+      <p>El formato del nombre del archivo que contiene los datos crudos debe ser en caso de pertenecer al proyecto "GVC_FFCC" como "EC01_ABR23.csv" y "P_ABR23_FO_4,535.csv". Se debe respetar siempre las mayúsculas de cómo figura el código del punto en el archivo de resultados en el caso de ser una estructura fija. Por otro lado, si el punto pertenece a otro proyecto el archivo debe seguir el siguiente formato "NOMBREPUNTO_AAMMDD_PROYECTO_DCNPS.csv".<br>
         Una vez completado el formulario y haber presionado el botón "Procesar", esperar a que se descargue el archivo sin realizar ninguna otra acción, esto puede demorar algunos segundos.<br>
         Luego de haberse descargado el archivo Excel, es importante que sea abierto, habilitar la edición del mismo y guardarlo , en lo contrario, los cálculos no surtiran efecto y este archivo no puede ser utilizado en otras funciones de la web.
       </p>
@@ -31,8 +31,8 @@
           <br>
           <input type="radio" id="radio_ef_fo" name="opcion" value="effo">
           <label for="radio_ef_fo">GVC_FFCC</label>
-          <input type="radio" id="radio_tgm" name="opcion" value="tgm">
-          <label for="radio_tgm">TGM</label>
+          <input type="radio" id="radio_otro" name="opcion" value="otro">
+          <label for="radio_otro">Otros</label>
           <br>
       </div>
       <div>
