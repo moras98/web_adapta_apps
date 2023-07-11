@@ -13,7 +13,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
-from .models import experiencia_Cliente
+from .models import experienciaRazonSocial
 import zipfile
 
 # Create your views here.
@@ -312,17 +312,17 @@ def experienciaRazones(request):
             nombre_razon = request.POST.get('nombre-razon')
             
             # Verificar si ya existe una razón social con el mismo nombre
-            if experiencia_Cliente.objects.filter(name=nombre_razon).exists():
+            if experienciaRazonSocial.objects.filter(name=nombre_razon).exists():
                 error_message = "Ya existe una razón social con ese nombre."
             else:
-                # Crear una nueva instancia de experiencia_Cliente con el nombre proporcionado
-                experiencia_Cliente.objects.create(name=nombre_razon)
+                # Crear una nueva instancia de experienciaRazonSocial con el nombre proporcionado
+                experienciaRazonSocial.objects.create(name=nombre_razon)
                 return redirect('experienciaRazones')
 
         else:
             error_message = ""
 
-        razones = experiencia_Cliente.objects.all()
+        razones = experienciaRazonSocial.objects.all()
         context = {'razones': razones, 'error_message': error_message}
         return render(request, './servicios_adapta_app/experiencia_razones.html', context)
     else:
