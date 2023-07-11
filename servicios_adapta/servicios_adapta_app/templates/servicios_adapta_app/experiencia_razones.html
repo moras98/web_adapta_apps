@@ -18,5 +18,23 @@
             </form>
         </div>
     </div>
+    <div class="table-section">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Razón Social</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for razon in razones %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ razon.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
