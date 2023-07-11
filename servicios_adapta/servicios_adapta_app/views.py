@@ -302,3 +302,10 @@ def eliminarFracciones(tiempo):
     tiempo_sin_fracciones = ':'.join(partes)
     
     return tiempo_sin_fracciones
+
+
+def experienciaRazones(request):
+    if request.user.is_authenticated:
+        pass
+    else:
+        return redirect('login')
