@@ -365,7 +365,7 @@ def add_proyecto(request):
 
             return redirect('./servicios_adapta_app/experiencia_proyectos.html')
         else:
-            return render(request, 'crear_proyecto.html', context={
+            return render(request, './servicios_adapta_app/experiencia_proyectos_form.html', context={
                 'razones_sociales': experienciaRazonSocial.objects.all(),
                 'localizaciones': experienciaLocalizaciones.objects.all(),
                 'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES
