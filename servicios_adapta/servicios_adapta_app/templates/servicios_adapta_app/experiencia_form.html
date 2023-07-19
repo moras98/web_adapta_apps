@@ -1,0 +1,71 @@
+{% extends './base.html' %}
+{% block title %}Experiencia-Agregar{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="left">
+        <h1>Experiencias</h1>
+        <div class="info">
+            <label class="title">Instrucciones</label>
+            <p></p>
+        </div>
+    </div>
+    <div class="right">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="codigo" class="title">Código</label>
+            <br>
+            <input type="text" name="codigo" required>
+            <br>
+            <br>
+            <label for="fecha-inicio" class="title">Fecha de Inicio</label>
+            <br>
+            <input type="date" name="fecha-inicio" required>
+            <br>
+            <br>
+            <label for="fecha-fin" class="title">Fecha de Fin</label>
+            <br>
+            <input type="text" name="fecha-fin" placeholder="En Curso">
+            <br>
+            <br>
+            <label for="cat-servicios" class="title">Categoría de Servicios</label>
+            <br>
+            <select name="cat-servicios" required>
+                {% for choice in CAT_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <label for="ficha" class="title">Ficha</label>
+            <br>
+            <input type="file" name="ficha">
+            <br>
+            <br>
+            <label for="atestado" class="title">Atestado</label>
+            <br>
+            <input type="file" name="atestado">
+            <br>
+            <br>
+            <label for="proyecto" class="title">Proyecto</label>
+            <br>
+            <select name="proyecto" required>
+                {% for proyecto in proyectos %}
+                <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <label for="roles" class="title">Roles</label>
+            <br>
+            <select name="roles" multiple>
+                {% for role in roles %}
+                <option value="{{ role }}">{{ role }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

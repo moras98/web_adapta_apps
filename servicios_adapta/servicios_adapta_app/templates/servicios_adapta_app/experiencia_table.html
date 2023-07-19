@@ -1,0 +1,50 @@
+{% extends './base.html' %}
+{% block title %}Experiencia-Tabla{% endblock %}
+{% block content %}
+<div class="tableForm">
+    <div class="top-section">
+        <h1>Experiencias</h1>
+        <div class="sub-section">
+            <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
+        </div>
+    </div>
+    <div class="table-section">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Código</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Nombre</th>
+                    <th>Razón Social</th>
+                    <th>Categoría Servicios</th>
+                    <th>Sector</th>
+                    <th>Localización</th>
+                    <th>Nombre Contacto</th>
+                    <th>Telefono Contacto</th>
+                    <th>eMail Contacto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contrato in contratos %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ contrato.codigo }}</td>
+                    <td>{{ contrato.fechaInicio }}</td>
+                    <td>{{ contrato.fechaFin }}</td>
+                    <td>{{ contrato.proyecto.nombre }}</td>
+                    <td>{{ contrato.proyecto.razon.name }}</td>
+                    <td>{{ contrato.catServicios }}</td>
+                    <td>{{ contrato.proyecto.sector }}</td>
+                    <td>{{ contrato.proyecto.localizacion.all|join:', ' }}</td>
+                    <td>{{ contrato.proyecto.contacto_nombre }}</td>
+                    <td>{{ contrato.proyecto.contacto_telefono }}</td>
+                    <td>{{ contrato.proyecto.contacto_mail }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

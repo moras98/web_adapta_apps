@@ -15,5 +15,7 @@ urlpatterns = [
     path('experiencia/razones-sociales/agregar', views.add_razon, name='experiencia-razones-agregar'),
     path('experiencia/proyectos', views.experienciaProyectos, name='experiencia-proyectos'),
     path('experiencia/proyectos/agregar', views.add_proyecto, name='experiencia-proyectos-agregar'),
+    path('experiencia/tabla', views.experienciaTabla, name='experiencia-tabla'),
+    path('experiencia/tabla/agregar', views.add_contrato, name='experiencia-agregar'),
     path('login/',views.login_view, name='login'),
 ]

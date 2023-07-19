@@ -152,7 +152,7 @@ class experienciaContrato(models.Model):
 
     fechaFin = models.CharField(max_length=25, default='En Curso') #Despues se ingresa por el usuario un texto con el formato aaaa-mm-dd
     
-    codigo = models.CharField(max_length=8)
+    codigo = models.CharField(max_length=8, unique=True)
     CAT_CHOICES = [
         ('categoria1', 'Categoria 1'),
         ('categoria2', 'Categoria 2'),
@@ -169,5 +169,4 @@ class experienciaContrato(models.Model):
 
     def __str__(self):
         return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"
-    
     

@@ -13,7 +13,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
-from .models import experienciaRazonSocial, experienciaProyecto, experienciaLocalizaciones
+from .models import experienciaRazonSocial, experienciaProyecto, experienciaLocalizaciones, experienciaContrato
 import zipfile
 
 # Create your views here.
@@ -369,6 +369,48 @@ def add_proyecto(request):
                 'razones_sociales': experienciaRazonSocial.objects.all(),
                 'localizaciones': experienciaLocalizaciones.objects.all(),
                 'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES
+            })
+    else:
+        return redirect('login')
+    
+
+def experienciaTabla(request):
+    if request.user.is_authenticated:
+        contratos = experienciaContrato.objects.all()
+
+        return render(request, './servicios_adapta_app/experiencia_table.html', context={'contratos': contratos})
+    else:
+        return redirect('login')
+    
+def add_contrato(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            fecha_inicio = request.POST.get('fecha-inicio')
+            fecha_fin = request.POST.get('fecha-fin')
+            codigo = request.POST.get('codigo')
+            cat_servicios = request.POST.get('cat-servicios')
+            ficha = request.FILES.get('ficha')
+            atestado = request.FILES.get('atestado')
+            proyecto_id = request.POST.get('proyecto')
+            # roles = obtener los roles seleccionados
+
+            contrato = experienciaContrato.objects.create(
+                fechaInicio=fecha_inicio,
+                fechaFin=fecha_fin,
+                codigo=codigo,
+                catServicios=cat_servicios,
+                ficha=ficha,
+                atestado=atestado,
+                proyecto_id=proyecto_id
+            )
+
+            # Asignar los roles al contrato
+
+            return redirect('./servicios_adapta_app/experiencia_table.html')
+        else:
+            return render(request, './servicios_adapta_app/experiencia_form.html', context={
+                'proyectos': experienciaProyecto.objects.all(),
+                'CAT_CHOICES': experienciaContrato.CAT_CHOICES
             })
     else:
         return redirect('login')
