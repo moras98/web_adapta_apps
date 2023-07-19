@@ -308,6 +308,14 @@ def eliminarFracciones(tiempo):
 
 def experienciaRazones(request):
     if request.user.is_authenticated:
+        razones = experienciaRazonSocial.objects.all()
+        context = {'razones': razones}
+        return render(request, './servicios_adapta_app/experiencia_razones.html', context)
+    else:
+        return redirect('login')
+    
+def add_razon(request):
+    if request.user.is_authenticated:
         if request.method == 'POST':
             nombre_razon = request.POST.get('nombre-razon')
             
@@ -321,9 +329,6 @@ def experienciaRazones(request):
 
         else:
             error_message = ""
-
-        razones = experienciaRazonSocial.objects.all()
-        context = {'razones': razones, 'error_message': error_message}
-        return render(request, './servicios_adapta_app/experiencia_razones.html', context)
+        return render(request, './servicios_adapta_app/experiencia_razones_form.html')
     else:
         return redirect('login')

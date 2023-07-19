@@ -12,5 +12,6 @@ urlpatterns = [
     path('medicion/borrar/<int:medicion_id>/', views.borrar_medicion, name='borrar_medicion'),
     path('experiencia/', views.menuExperiencia, name='menu-experiencia'),
     path('experiencia/razones-sociales', views.experienciaRazones, name='experiencia-razones'),
+    path('experiencia/razones-sociales/agregar', views.add_razon, name='experiencia-razones-agregar'),
     path('login/',views.login_view, name='login'),
 ]
