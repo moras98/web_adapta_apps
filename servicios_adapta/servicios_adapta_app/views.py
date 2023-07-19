@@ -13,7 +13,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
-from .models import experienciaRazonSocial, experienciaProyecto
+from .models import experienciaRazonSocial, experienciaProyecto, experienciaLocalizaciones
 import zipfile
 
 # Create your views here.
@@ -337,6 +337,38 @@ def experienciaProyectos(request):
     if request.user.is_authenticated:
         proyectos = experienciaProyecto.objects.all()
         context = {'proyectos': proyectos}
-        return render(request, './servicios_adapta_app/experiencia_razones.html', context)
+        return render(request, './servicios_adapta_app/experiencia_proyectos.html', context)
+    else:
+        return redirect('login')
+    
+def add_proyecto(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            nombre = request.POST.get('nombre-proyecto')
+            contacto_nombre = request.POST.get('contacto-nombre')
+            contacto_telefono = request.POST.get('contacto-telefono')
+            contacto_mail = request.POST.get('contacto-mail')
+            razon_id = request.POST.get('razon')
+            localizaciones_ids = request.POST.getlist('localizacion')
+            sector = request.POST.get('sector')
+
+            proyecto = experienciaProyecto.objects.create(
+                nombre=nombre,
+                contacto_nombre=contacto_nombre,
+                contacto_telefono=contacto_telefono,
+                contacto_mail=contacto_mail,
+                razon_id=razon_id,
+                sector=sector
+            )
+
+            proyecto.localizacion.set(localizaciones_ids)
+
+            return redirect('./servicios_adapta_app/experiencia_proyectos.html')
+        else:
+            return render(request, 'crear_proyecto.html', context={
+                'razones_sociales': experienciaRazonSocial.objects.all(),
+                'localizaciones': experienciaLocalizaciones.objects.all(),
+                'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES
+            })
     else:
         return redirect('login')

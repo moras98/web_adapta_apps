@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 {% block title %}Experiencia-Proyectos{% endblock %}
-{{% block content %}
+{% block content %}
 <div class="container">
     <div class="left">
         <h1>Proyectos</h1>
@@ -15,6 +15,48 @@
             <label for="nombre-proyecto" class="title">Nombre</label>
             <br>
             <input type="text" name="nombre-proyecto" required>
+            <br>
+            <br>
+            <label for="contacto-nombre" class="title">Contacto Nombre</label>
+            <br>
+            <input type="text" name="contacto-nombre" required>
+            <br>
+            <br>
+            <label for="contacto-telefono" class="title">Contacto Teléfono</label>
+            <br>
+            <input type="text" name="contacto-telefono">
+            <br>
+            <br>
+            <label for="contacto-mail" class="title">Contacto Correo Electrónico</label>
+            <br>
+            <input type="email" name="contacto-mail">
+            <br>
+            <br>
+            <label for="razon" class="title">Razón Social</label>
+            <br>
+            <select name="razon" required>
+                {% for razon in razones_sociales %}
+                <option value="{{ razon.id }}">{{ razon.name }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <label for="localizacion" class="title">Localizaciones</label>
+            <br>
+            <select name="localizacion" multiple required>
+                {% for localizacion in localizaciones %}
+                <option value="{{ localizacion.id }}">{{ localizacion.name }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <label for="sector" class="title">Sector</label>
+            <br>
+            <select name="sector" required>
+                {% for choice in SECTOR_CHOICES %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
             <br>
             <br>
             <button type="submit">Confirmar</button>

@@ -169,3 +169,5 @@ class experienciaContrato(models.Model):
 
     def __str__(self):
         return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"
+    
+    
