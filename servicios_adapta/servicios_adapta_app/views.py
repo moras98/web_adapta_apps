@@ -320,12 +320,12 @@ def add_razon(request):
             nombre_razon = request.POST.get('nombre-razon')
             
             # Verificar si ya existe una razón social con el mismo nombre
-            if experienciaRazonSocial.objects.filter(name=nombre_razon).exists():
+            if experienciaRazonSocial.objects.filter(nombre=nombre_razon).exists():
                 error_message = "Ya existe una razón social con ese nombre."
             else:
                 # Crear una nueva instancia de experienciaRazonSocial con el nombre proporcionado
-                experienciaRazonSocial.objects.create(name=nombre_razon)
-                return redirect('experienciaRazones')
+                experienciaRazonSocial.objects.create(nombre=nombre_razon)
+                return redirect('./servicios_adapta_app/experiencia_razones.html')
 
         else:
             error_message = ""

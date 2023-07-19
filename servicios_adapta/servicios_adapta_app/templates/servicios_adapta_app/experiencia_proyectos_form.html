@@ -36,14 +36,14 @@
             <br>
             <select name="razon" required>
                 {% for razon in razones_sociales %}
-                <option value="{{ razon.id }}">{{ razon.name }}</option>
+                <option value="{{ razon.id }}">{{ razon.nombre }}</option>
                 {% endfor %}
             </select>
             <br>
             <br>
             <label for="localizacion" class="title">Localizaciones</label>
             <br>
-            <select name="localizacion" multiple required>
+            <select name="localizacion" multiple>
                 {% for localizacion in localizaciones %}
                 <option value="{{ localizacion.id }}">{{ localizacion.name }}</option>
                 {% endfor %}
