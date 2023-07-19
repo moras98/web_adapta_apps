@@ -13,7 +13,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
-from .models import experienciaRazonSocial
+from .models import experienciaRazonSocial, experienciaProyecto
 import zipfile
 
 # Create your views here.
@@ -330,5 +330,13 @@ def add_razon(request):
         else:
             error_message = ""
         return render(request, './servicios_adapta_app/experiencia_razones_form.html')
+    else:
+        return redirect('login')
+    
+def experienciaProyectos(request):
+    if request.user.is_authenticated:
+        proyectos = experienciaProyecto.objects.all()
+        context = {'proyectos': proyectos}
+        return render(request, './servicios_adapta_app/experiencia_razones.html', context)
     else:
         return redirect('login')
