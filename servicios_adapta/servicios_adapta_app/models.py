@@ -110,7 +110,10 @@ class experienciaLocalizaciones(models.Model):
     pais = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.departamento, self.pais}"
+        if self.departamento:
+            return f"{self.departamento}, {self.pais}"
+        else:
+            return self.pais
 
 
 class experienciaProyecto(models.Model):

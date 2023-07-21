@@ -43,11 +43,18 @@
             <br>
             <label for="localizacion" class="title">Localizaciones</label>
             <br>
-            <select name="localizacion" multiple>
+            <!-- <select name="localizacion" multiple>
                 {% for localizacion in localizaciones %}
-                <option value="{{ localizacion.id }}">{{ localizacion.name }}</option>
+                <option value="{{ localizacion.id }}">{{ localizacion }}</option>
                 {% endfor %}
-            </select>
+            </select> -->
+            {% for localizacion in localizaciones %}
+                <label>
+                    <input type="checkbox" name="localizacion" value="{{ localizacion.id }}">
+                    {{ localizacion }}
+                </label>
+                <br>
+            {% endfor %}
             <br>
             <br>
             <label for="sector" class="title">Sector</label>

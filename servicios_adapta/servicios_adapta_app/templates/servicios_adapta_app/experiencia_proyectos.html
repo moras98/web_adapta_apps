@@ -20,6 +20,7 @@
                     <th>Nombre Contacto</th>
                     <th>Telefono Contacto</th>
                     <th>eMail Contacto</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,11 +29,17 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ proyecto.nombre }}</td>
                     <td>{{ proyecto.razon.nombre }}</td>
-                    <td>{{ proyecto.localizacion.all|join:', ' }}</td>
-                    <td>{{ proyecto.sector }}</td>
+                    <td>{{ proyecto.localizacion.all|join:'; ' }}</td>
+                    <td>{{ proyecto.get_sector_display }}</td>
                     <td>{{ proyecto.contacto_nombre }}</td>
                     <td>{{ proyecto.contacto_telefono }}</td>
                     <td>{{ proyecto.contacto_mail }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'borrar_proyecto' proyecto.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Borrar</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -14,6 +14,7 @@
                 <tr>
                     <th></th>
                     <th>Razón Social</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,12 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ razon.nombre }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'borrar_razon' razon.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Borrar</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

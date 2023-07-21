@@ -325,13 +325,24 @@ def add_razon(request):
             else:
                 # Crear una nueva instancia de experienciaRazonSocial con el nombre proporcionado
                 experienciaRazonSocial.objects.create(nombre=nombre_razon)
-                return redirect('./servicios_adapta_app/experiencia_razones.html')
+                return redirect('experiencia-razones')
 
         else:
             error_message = ""
         return render(request, './servicios_adapta_app/experiencia_razones_form.html')
     else:
         return redirect('login')
+    
+def borrar_razon(request, razon_id):
+    if request.method == 'POST':
+        # Obtener la instancia de la medición a borrar
+        try:
+            razon = experienciaRazonSocial.objects.get(id=razon_id)
+            razon.delete()
+        except experienciaRazonSocial.DoesNotExist:
+            # Manejar el caso cuando la medición no existe
+            pass
+    return redirect('experiencia-razones')
     
 def experienciaProyectos(request):
     if request.user.is_authenticated:
@@ -363,7 +374,7 @@ def add_proyecto(request):
 
             proyecto.localizacion.set(localizaciones_ids)
 
-            return redirect('./servicios_adapta_app/experiencia_proyectos.html')
+            return redirect('experiencia-proyectos')
         else:
             return render(request, './servicios_adapta_app/experiencia_proyectos_form.html', context={
                 'razones_sociales': experienciaRazonSocial.objects.all(),
@@ -372,6 +383,17 @@ def add_proyecto(request):
             })
     else:
         return redirect('login')
+    
+def borrar_proyecto(request, proyecto_id):
+    if request.method == 'POST':
+        # Obtener la instancia de la medición a borrar
+        try:
+            proyecto = experienciaProyecto.objects.get(id=proyecto_id)
+            proyecto.delete()
+        except experienciaProyecto.DoesNotExist:
+            # Manejar el caso cuando la medición no existe
+            pass
+    return redirect('experiencia-proyectos')
     
 
 def experienciaTabla(request):
