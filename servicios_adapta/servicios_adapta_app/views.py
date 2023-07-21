@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.conf import settings
+from django.db import IntegrityError
 import os
 import pandas as pd
 import openpyxl as xl
@@ -434,16 +435,18 @@ def add_contrato(request):
             atestado = request.FILES.get('atestado')
             proyecto_id = request.POST.get('proyecto')
             # roles = obtener los roles seleccionados
-
-            contrato = experienciaContrato.objects.create(
-                fechaInicio=fecha_inicio,
-                fechaFin=fecha_fin,
-                codigo=codigo,
-                catServicios=cat_servicios,
-                ficha=ficha,
-                atestado=atestado,
-                proyecto_id=proyecto_id
-            )
+            try:
+                contrato = experienciaContrato.objects.create(
+                    fechaInicio=fecha_inicio,
+                    fechaFin=fecha_fin,
+                    codigo=codigo,
+                    catServicios=cat_servicios,
+                    ficha=ficha,
+                    atestado=atestado,
+                    proyecto_id=proyecto_id
+                )
+            except IntegrityError:
+                return HttpResponse("Error: Codigo ya existente")
 
             # Asignar los roles al contrato
 
