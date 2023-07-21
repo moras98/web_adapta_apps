@@ -407,8 +407,25 @@ def experienciaTabla(request):
 def add_contrato(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            fecha_inicio = request.POST.get('fecha-inicio')
-            fecha_fin = request.POST.get('fecha-fin')
+            dia_inicio = request.POST.get('dia-inicio')
+            mes_inicio = request.POST.get('mes-inicio')
+            ano_inicio = request.POST.get('ano-inicio')
+            # fecha_inicio = request.POST.get('fecha-inicio')
+            fecha_inicio_str = f"{ano_inicio}-{mes_inicio}-{dia_inicio}"
+            try:
+                fecha_inicio = datetime.strptime(fecha_inicio_str, '%Y-%m-%d')
+            except ValueError:
+                # Manejar un formato de fecha incorrecto si es necesario
+                # Aquí puedes agregar un mensaje de error o redirigir al usuario a una página de error
+                return HttpResponse("Error: Formato de fecha incorrecto")
+            
+            dia_fin = request.POST.get('dia-fin')
+            mes_fin = request.POST.get('mes-fin')
+            ano_fin = request.POST.get('ano-fin')
+            fecha_fin_str = f"{ano_fin}-{mes_fin}-{dia_fin}"
+            if fecha_fin_str != "0000-00-00":
+                fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
+                
             codigo = request.POST.get('codigo')
             cat_servicios = request.POST.get('cat-servicios')
             ficha = request.FILES.get('ficha')
