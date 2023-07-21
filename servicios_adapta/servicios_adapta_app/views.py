@@ -425,7 +425,9 @@ def add_contrato(request):
             fecha_fin_str = f"{ano_fin}-{mes_fin}-{dia_fin}"
             if fecha_fin_str != "0000-00-00":
                 fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
-                
+            else:
+                fecha_fin = "En curso"
+
             codigo = request.POST.get('codigo')
             cat_servicios = request.POST.get('cat-servicios')
             ficha = request.FILES.get('ficha')
@@ -445,7 +447,7 @@ def add_contrato(request):
 
             # Asignar los roles al contrato
 
-            return redirect('./servicios_adapta_app/experiencia_table.html')
+            return redirect('experiencia-tabla')
         else:
             return render(request, './servicios_adapta_app/experiencia_form.html', context={
                 'proyectos': experienciaProyecto.objects.all(),
@@ -453,3 +455,4 @@ def add_contrato(request):
             })
     else:
         return redirect('login')
+
