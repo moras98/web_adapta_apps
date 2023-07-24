@@ -26,6 +26,7 @@
                     <th>eMail Contacto</th>
                     <th>Ficha</th>
                     <th>Atestado</th>
+                    <th>Roles</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -46,6 +47,11 @@
                     <td>{{ contrato.proyecto.contacto_mail }}</td>
                     <td><a href="{{ contrato.ficha }}" target="_blank">Ver Ficha</a></td>
                     <td><a href="{{ contrato.atestado }}" target="_blank">Ver Atestado</a></td>
+                    <td>
+                        {% for contrato_empleado in contrato.contratoempleado_set.all %}
+                            {{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}<br>
+                        {% endfor %}
+                    </td>
                     <td>Editar</td>
                 </tr>
                 {% endfor %}

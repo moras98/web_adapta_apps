@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.conf import settings
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 import os
 import pandas as pd
 import openpyxl as xl
@@ -14,7 +14,7 @@ from django.conf import settings
 from .models import Medicion, Punto
 from datetime import datetime
 from django.contrib.sessions.models import Session
-from .models import experienciaRazonSocial, experienciaProyecto, experienciaLocalizaciones, experienciaContrato
+from .models import experienciaRazonSocial, experienciaProyecto, experienciaLocalizaciones, experienciaContrato, experienciaEmpleado, experienciaRol, ContratoEmpleado
 import zipfile
 
 # Create your views here.
@@ -434,26 +434,54 @@ def add_contrato(request):
             ficha = request.POST.get('ficha')
             atestado = request.POST.get('atestado')
             proyecto_id = request.POST.get('proyecto')
-            # roles = obtener los roles seleccionados
-            try:
-                contrato = experienciaContrato.objects.create(
-                    fechaInicio=fecha_inicio,
-                    fechaFin=fecha_fin,
-                    codigo=codigo,
-                    catServicios=cat_servicios,
-                    ficha=ficha,
-                    atestado=atestado,
-                    proyecto_id=proyecto_id
-                )
-            except IntegrityError:
-                return HttpResponse("Error: Codigo ya existente")
+            
+            # Obtener los datos de los empleados y roles seleccionados
+            empleados = request.POST.getlist('empleado')
+            roles = request.POST.getlist('rol')
 
-            # Asignar los roles al contrato
+            # Verificar que la cantidad de empleados y roles seleccionados coincida
+            if len(empleados) != len(roles):
+                return HttpResponse("Error: La cantidad de empleados y roles seleccionados no coincide")
+
+            # Crear una lista para almacenar las asociaciones de empleados y roles
+            asociaciones_empleados_roles = []
+
+            # Crear una tupla para cada asociación y añadirla a la lista
+            for empleado_id, rol_id in zip(empleados, roles):
+                asociaciones_empleados_roles.append((empleado_id, rol_id))
+
+            try:
+                with transaction.atomic():
+                    # Crear el contrato
+                    contrato = experienciaContrato.objects.create(
+                        fechaInicio=fecha_inicio,
+                        fechaFin=fecha_fin,
+                        codigo=codigo,
+                        catServicios=cat_servicios,
+                        ficha=ficha,
+                        atestado=atestado,
+                        proyecto_id=proyecto_id
+                    )
+
+                    # Asociar los empleados y roles con el contrato
+                    for empleado_id, rol_id in asociaciones_empleados_roles:
+                        empleado = experienciaEmpleado.objects.get(pk=empleado_id)
+                        rol = experienciaRol.objects.get(pk=rol_id)
+                        ContratoEmpleado.objects.create(
+                            contrato=contrato,
+                            empleado=empleado,
+                            rol=rol
+                        )
+
+            except IntegrityError:
+                return HttpResponse("Error: Código ya existente")
 
             return redirect('experiencia-tabla')
         else:
             return render(request, './servicios_adapta_app/experiencia_form.html', context={
                 'proyectos': experienciaProyecto.objects.all(),
+                'empleados': experienciaEmpleado.objects.all(),
+                'roles': experienciaRol.objects.all(),
                 'CAT_CHOICES': experienciaContrato.CAT_CHOICES
             })
     else:

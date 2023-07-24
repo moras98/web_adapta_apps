@@ -145,7 +145,20 @@ class experienciaProyecto(models.Model):
     
     def __str__(self):
         return self.nombre
-    
+
+class experienciaEmpleado(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre
+
+
+class experienciaRol(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):  
+        return self.nombre
+
 class experienciaContrato(models.Model):
     fechaInicio = models.DateField()
     
@@ -168,8 +181,15 @@ class experienciaContrato(models.Model):
     ficha = models.URLField(null=True, blank=True)
     atestado = models.URLField(null=True, blank=True)
     proyecto = models.ForeignKey(experienciaProyecto, on_delete=models.CASCADE)
-    #roles
+    empleados = models.ManyToManyField(experienciaEmpleado, through='ContratoEmpleado')
 
     def __str__(self):
         return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"
     
+class ContratoEmpleado(models.Model):
+    contrato = models.ForeignKey(experienciaContrato, on_delete=models.CASCADE)
+    empleado = models.ForeignKey(experienciaEmpleado, on_delete=models.CASCADE)
+    rol = models.ForeignKey(experienciaRol, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.empleado} - {self.rol}"

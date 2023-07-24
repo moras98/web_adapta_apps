@@ -59,17 +59,74 @@
             </select>
             <br>
             <br>
-            <label for="roles" class="title">Roles</label>
+            <h3>Empleados y Roles</h3>
+            <table id="empleados-table">
+                <tr>
+                    <th>Empleado</th>
+                    <th>Rol</th>
+                </tr>
+                <tr class="empleado-row">
+                    <td>
+                        <select name="empleado" class="empleado-select" required>
+                            <option value="" selected disabled>Seleccionar empleado</option>
+                            {% for empleado in empleados %}
+                                <option value="{{ empleado.id }}">{{ empleado.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="rol" class="rol-select" required>
+                            <option value="" selected disabled>Seleccionar rol</option>
+                            {% for rol in roles %}
+                                <option value="{{ rol.id }}">{{ rol.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <button type="button" id="add-empleado">Agregar Empleado</button>
             <br>
-            <select name="roles" multiple>
-                {% for role in roles %}
-                <option value="{{ role }}">{{ role }}</option>
-                {% endfor %}
-            </select>
             <br>
-            <br>
-            <button type="submit">Confirmar</button>
+            <button type="submit">Guardar Contrato</button>
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let empleadoRowTemplate = `
+            <tr class="empleado-row">
+                <td>
+                    <select name="empleado" class="empleado-select" required>
+                        <option value="" selected disabled>Seleccionar empleado</option>
+                        {% for empleado in empleados %}
+                            <option value="{{ empleado.id }}">{{ empleado.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="rol" class="rol-select" required>
+                        <option value="" selected disabled>Seleccionar rol</option>
+                        {% for rol in roles %}
+                            <option value="{{ rol.id }}">{{ rol.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="remove-empleado">Eliminar</button>
+                </td>
+            </tr>
+        `;
+
+        $("#add-empleado").click(function () {
+            $("#empleados-table").append(empleadoRowTemplate);
+        });
+
+        $(document).on("click", ".remove-empleado", function () {
+            $(this).closest(".empleado-row").remove();
+        });
+    });
+</script>
 {% endblock %}
