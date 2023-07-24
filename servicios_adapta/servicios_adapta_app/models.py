@@ -165,8 +165,8 @@ class experienciaContrato(models.Model):
         ('categoria6', 'Categoria 6'),
     ]
     catServicios = models.CharField(max_length=50, choices=CAT_CHOICES)
-    ficha = models.FileField(null=True, blank=True)
-    atestado = models.FileField(null=True, blank=True)
+    ficha = models.URLField(null=True, blank=True)
+    atestado = models.URLField(null=True, blank=True)
     proyecto = models.ForeignKey(experienciaProyecto, on_delete=models.CASCADE)
     #roles
 

@@ -431,8 +431,8 @@ def add_contrato(request):
 
             codigo = request.POST.get('codigo')
             cat_servicios = request.POST.get('cat-servicios')
-            ficha = request.FILES.get('ficha')
-            atestado = request.FILES.get('atestado')
+            ficha = request.POST.get('ficha')
+            atestado = request.POST.get('atestado')
             proyecto_id = request.POST.get('proyecto')
             # roles = obtener los roles seleccionados
             try:

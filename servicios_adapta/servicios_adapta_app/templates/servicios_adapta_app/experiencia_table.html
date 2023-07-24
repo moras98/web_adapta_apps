@@ -24,6 +24,8 @@
                     <th>Nombre Contacto</th>
                     <th>Telefono Contacto</th>
                     <th>eMail Contacto</th>
+                    <th>Ficha</th>
+                    <th>Atestado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -42,6 +44,8 @@
                     <td>{{ contrato.proyecto.contacto_nombre }}</td>
                     <td>{{ contrato.proyecto.contacto_telefono }}</td>
                     <td>{{ contrato.proyecto.contacto_mail }}</td>
+                    <td><a href="{{ contrato.ficha }}" target="_blank">Ver Ficha</a></td>
+                    <td><a href="{{ contrato.atestado }}" target="_blank">Ver Atestado</a></td>
                     <td>Editar</td>
                 </tr>
                 {% endfor %}
