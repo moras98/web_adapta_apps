@@ -425,7 +425,10 @@ def add_contrato(request):
             ano_fin = request.POST.get('ano-fin')
             fecha_fin_str = f"{ano_fin}-{mes_fin}-{dia_fin}"
             if fecha_fin_str != "0000-00-00":
-                fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
+                try:
+                    fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
+                except ValueError:
+                    fecha_fin = None
             else:
                 fecha_fin = None
 
