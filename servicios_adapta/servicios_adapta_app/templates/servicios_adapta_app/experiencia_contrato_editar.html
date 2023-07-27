@@ -1,0 +1,151 @@
+{% extends './base.html' %}
+{% block title %}Editar Experiencia{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="left">
+        <h1>Editar</h1>
+        <div class="info">
+            <label class="title">Instrucciones</label>
+            <p></p>
+        </div>
+    </div>
+    <div class="right">
+        <form method="POST" action="{% url 'guardar_contrato' contrato.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="codigo" class="title">Código</label>
+            <br>
+            <input type="text" name="codigo" value="{{ contrato.codigo }}" required>
+            <br>
+            <br>
+            <label for="dia-inicio" class="title">Fecha de Inicio (dd/mm/yyyy)</label>
+            <br>
+            <input type="text" name="dia-inicio" maxlength="2" value="{{ contrato.fechaInicio.day }}" required> / 
+            <input type="text" name="mes-inicio" maxlength="2" value="{{ contrato.fechaInicio.month }}" required> / 
+            <input type="text" name="ano-inicio" maxlength="4" value="{{ contrato.fechaInicio.year }}" required>
+            <br>
+            <br>
+            <label for="dia-inicio" class="title">Fecha Fin (dd/mm/yyyy)</label>
+            <br>
+            {% if contrato.fechaFin == None %}
+                <input type="text" name="dia-fin" maxlength="2" value="00"> /
+                <input type="text" name="mes-fin" maxlength="2"  value="00"> / 
+                <input type="text" name="ano-fin" maxlength="4"  value="0000">
+            {% else %}
+                <input type="text" name="dia-fin" maxlength="2" value="{{ contrato.fechaFin.day }}"> /
+                <input type="text" name="mes-fin" maxlength="2"  value="{{ contrato.fechaFin.month }}"> / 
+                <input type="text" name="ano-fin" maxlength="4"  value="{{ contrato.fechaFin.year }}">
+            {% endif %}
+            <br>
+            <br>
+            <label for="cat-servicios" class="title">Categoría de Servicios</label>
+            <br>
+            <select name="cat-servicios" required>
+                {% for choice in CAT_CHOICES %}
+                <option value="{{ choice.0 }}" {% if choice.0 == cat_servicios_actual %}selected{% endif %}>
+                    {{ choice.1 }}
+                </option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <label for="ficha" class="title">Ficha</label>
+            <br>
+            <input type="url" id="ficha_url" name="ficha" placeholder="Ingrese una URL válida" {% if contrato.ficha %}value="{{ contrato.ficha }}"{% endif %}">
+            <br>
+            <br>
+            <label for="atestado" class="title">Atestado</label>
+            <br>
+            <input type="url" id="atestado_url" name="atestado" placeholder="Ingrese una URL válida" {% if contrato.atestado %}value="{{ contrato.atestado }}"{% endif %}">
+            <br>
+            <br>
+            <label for="proyecto" class="title">Proyecto</label>
+            <br>
+            <select name="proyecto" required>
+                {% for proyecto in proyectos %}
+                <option value="{{ proyecto.id }}" {% if proyecto.id == proyecto_actual.id %}selected{% endif %}>
+                    {{ proyecto.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <h3>Empleados y Roles Asignados</h3>
+<table id="empleados-table">
+    <tr>
+        <th>Empleado</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+    </tr>
+    {% for asignacion in contrato.contratoempleado_set.all %}
+    <tr class="empleado-row">
+        <td>
+            <select name="empleado" class="empleado-select" required>
+                <option value="" selected disabled>Seleccionar empleado</option>
+                {% for empleado in empleados %}
+                    <option value="{{ empleado.id }}" {% if empleado == asignacion.empleado %}selected{% endif %}>{{ empleado.nombre }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <select name="rol" class="rol-select" required>
+                <option value="" selected disabled>Seleccionar rol</option>
+                {% for rol in roles %}
+                    <option value="{{ rol.id }}" {% if rol == asignacion.rol %}selected{% endif %}>{{ rol.nombre }}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <button type="button" class="remove-empleado" data-asignacion-id="{{ asignacion.id }}">Eliminar</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<button type="button" id="add-empleado">Agregar Empleado</button>
+
+
+            <br>
+            <br>
+            <button type="submit">Guardar Contrato</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let empleadoRowTemplate = `
+            <tr class="empleado-row">
+                <td>
+                    <select name="empleado" class="empleado-select" required>
+                        <option value="" selected disabled>Seleccionar empleado</option>
+                        {% for empleado in empleados %}
+                            <option value="{{ empleado.id }}">{{ empleado.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <select name="rol" class="rol-select" required>
+                        <option value="" selected disabled>Seleccionar rol</option>
+                        {% for rol in roles %}
+                            <option value="{{ rol.id }}">{{ rol.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="remove-empleado">Eliminar</button>
+                </td>
+            </tr>
+        `;
+
+        $("#add-empleado").click(function () {
+            $("#empleados-table").append(empleadoRowTemplate);
+        });
+
+        $(document).on("click", ".remove-empleado", function () {
+            const row = $(this).closest(".empleado-row");
+            row.remove();
+        });
+    });
+</script>
+{% endblock %}

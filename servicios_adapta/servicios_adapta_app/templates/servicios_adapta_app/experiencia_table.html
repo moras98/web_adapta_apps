@@ -36,7 +36,12 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
-                    <td>{{ contrato.fechaFin }}</td>
+                    <td>{% if contrato.fechaFin %}
+                            {{ contrato.fechaFin|date:"M. d, Y" }}
+                        {% else %}
+                            En curso
+                        {% endif %}
+                    </td>
                     <td>{{ contrato.proyecto.nombre }}</td>
                     <td>{{ contrato.proyecto.razon.name }}</td>
                     <td>{{ contrato.get_catServicios_display }}</td>
@@ -52,7 +57,10 @@
                             {{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}<br>
                         {% endfor %}
                     </td>
-                    <td>Editar</td>
+                    <td>
+                        <a href="{% url 'experiencia-editar' contrato.id %}">Editar</a>
+                        <a href="{% url 'borrar_contrato' contrato.id %}">Borrar</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -166,7 +166,7 @@ class experienciaContrato(models.Model):
     def fecha_fin_default():#si la borro da error
         pass
 
-    fechaFin = models.CharField(max_length=25, default='En Curso') #Despues se ingresa por el usuario un texto con el formato aaaa-mm-dd
+    fechaFin = models.DateField(null=True, blank=True) #Despues se ingresa por el usuario un texto con el formato aaaa-mm-dd
     
     codigo = models.CharField(max_length=8, unique=True)
     CAT_CHOICES = [

@@ -19,5 +19,8 @@ urlpatterns = [
     path('experiencia/proyectos/borrar/<int:proyecto_id>/', views.borrar_proyecto, name='borrar_proyecto'),
     path('experiencia/tabla', views.experienciaTabla, name='experiencia-tabla'),
     path('experiencia/tabla/agregar', views.add_contrato, name='experiencia-agregar'),
+    path('experiencia/tabla/editar/<int:contrato_id>/', views.editar_contrato, name='experiencia-editar'),
+    path('experiencia/tabla/editar/guardar_contrato/<int:contrato_id>/', views.guardar_contrato, name='guardar_contrato'),
+    path('experiencia/tabla/borrar/<int:contrato_id>/', views.borrar_contrato, name='borrar_contrato'),
     path('login/',views.login_view, name='login'),
 ]

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.conf import settings
 from django.db import IntegrityError, transaction
@@ -427,7 +427,7 @@ def add_contrato(request):
             if fecha_fin_str != "0000-00-00":
                 fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
             else:
-                fecha_fin = "En curso"
+                fecha_fin = None
 
             codigo = request.POST.get('codigo')
             cat_servicios = request.POST.get('cat-servicios')
@@ -487,3 +487,106 @@ def add_contrato(request):
     else:
         return redirect('login')
 
+def editar_contrato(request, contrato_id):
+    if request.user.is_authenticated:
+        contrato = get_object_or_404(experienciaContrato, id=contrato_id)
+        proyectos_disponibles = experienciaProyecto.objects.all()  # Obtener los proyectos disponibles
+        proyecto_actual = contrato.proyecto  # Obtener el proyecto actual del contrato
+        empleados_disponibles = experienciaEmpleado.objects.all()  # Obtener todos los empleados disponibles
+        roles_disponibles = experienciaRol.objects.all()  # Obtener todos los roles disponibles
+        empleados_asignados = contrato.empleados.all()  # Obtener los empleados asignados al contrato
+        roles_asignados = ContratoEmpleado.objects.filter(contrato=contrato)  # Obtener los roles asignados al contrato
+        return render(request, './servicios_adapta_app/experiencia_contrato_editar.html', {
+            'contrato': contrato,
+            'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
+            'proyectos': proyectos_disponibles,
+            'proyecto_actual': proyecto_actual,
+            'empleados': empleados_disponibles,
+            'roles': roles_disponibles,
+            'empleados_asignados': empleados_asignados,
+            'roles_asignados': roles_asignados,
+        })
+    else:
+        return redirect('login')
+
+
+def guardar_contrato(request, contrato_id):
+    if request.user.is_authenticated:
+        contrato = get_object_or_404(experienciaContrato, id=contrato_id)
+
+        if request.method == 'POST':
+            # Obtener los nuevos valores del formulario
+            dia_inicio = request.POST.get('dia-inicio')
+            mes_inicio = request.POST.get('mes-inicio')
+            ano_inicio = request.POST.get('ano-inicio')
+            fecha_inicio_str = f"{ano_inicio}-{mes_inicio}-{dia_inicio}"
+            try:
+                fecha_inicio = datetime.strptime(fecha_inicio_str, '%Y-%m-%d')
+            except ValueError:
+                # Manejar un formato de fecha incorrecto si es necesario
+                # Aquí puedes agregar un mensaje de error o redirigir al usuario a una página de error
+                return HttpResponse("Error: Formato de fecha incorrecto")
+            
+            dia_fin = request.POST.get('dia-fin')
+            mes_fin = request.POST.get('mes-fin')
+            ano_fin = request.POST.get('ano-fin')
+            fecha_fin_str = f"{ano_fin}-{mes_fin}-{dia_fin}"
+            if fecha_fin_str != "0000-00-00":
+                fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
+            else:
+                fecha_fin = None  # Usa None en lugar de "En curso" para el campo de fechaFin si no se selecciona una fecha válida
+
+            codigo = request.POST.get('codigo')
+            cat_servicios = request.POST.get('cat-servicios')
+            ficha = request.POST.get('ficha')
+            atestado = request.POST.get('atestado')
+            proyecto_id = request.POST.get('proyecto')
+            # ... Obtener los demás campos ...
+
+            # Actualizar el contrato con los nuevos valores
+            contrato.fechaInicio = fecha_inicio
+            contrato.fechaFin = fecha_fin
+            contrato.codigo = codigo
+            contrato.catServicios = cat_servicios
+            contrato.ficha = ficha
+            contrato.atestado = atestado
+            contrato.proyecto_id = proyecto_id
+
+            contrato.save()  # Guardar los cambios en la base de datos
+
+            # Asociar los empleados y roles con el contrato
+            empleados = request.POST.getlist('empleado')
+            roles = request.POST.getlist('rol')
+
+            # Verificar que la cantidad de empleados y roles seleccionados coincida
+            if len(empleados) != len(roles):
+                return HttpResponse("Error: La cantidad de empleados y roles seleccionados no coincide")
+
+            # Eliminar todas las asociaciones de empleados y roles anteriores
+            contrato.contratoempleado_set.all().delete()
+
+            # Crear una nueva asociación para cada empleado y rol seleccionado
+            for empleado_id, rol_id in zip(empleados, roles):
+                empleado = experienciaEmpleado.objects.get(pk=empleado_id)
+                rol = experienciaRol.objects.get(pk=rol_id)
+                ContratoEmpleado.objects.create(
+                    contrato=contrato,
+                    empleado=empleado,
+                    rol=rol
+                )
+
+            # Redireccionar a una página de éxito o a la misma página de edición
+            return redirect('experiencia-tabla')  # Cambia 'nombre_de_la_vista_de_exito' a la vista que quieras mostrar
+
+    else:
+        return redirect('login')
+
+
+def borrar_contrato(request, contrato_id):
+    contrato = get_object_or_404(experienciaContrato, id=contrato_id)
+    
+    if request.method == 'POST':
+        contrato.delete()  # Eliminar completamente el contrato de la base de datos
+        return redirect('experiencia-tabla')  # Redireccionar a la vista de la tabla de contratos
+
+    return render(request, './servicios_adapta_app/experiencia_contrato_borrar.html', {'contrato': contrato})
