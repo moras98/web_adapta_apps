@@ -16,6 +16,14 @@
                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                 {% endfor %}
             </select>
+            <!-- Filtrado por sector -->
+            <label for="sector-filter" class="title">Filtrar por Sector:</label>
+            <select id="sector-filter">
+                <option value="">Todos</option>
+                {% for choice in SECTOR_CHOICES %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
             <!-- Filtrado razon social -->
             <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
             <select id="razon-filter">
@@ -46,6 +54,8 @@
                 <option value="">Todo</option>
                 <option value="en_curso">En curso</option>
             </select>
+            <!-- Exportar a excel -->
+            <button id="exportar-excel">Exportar a Excel</button>
         </div>
         <div class="sub-section">
             <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
@@ -75,16 +85,26 @@
             </thead>
             <tbody>
                 {% for contrato in contratos %}
-                <tr data-codigo="{{ contrato.codigo }}" 
-                    data-cat-servicios="{{ contrato.catServicios }}" 
+                <tr data-codigo="{{ contrato.codigo }}"
+                    data-cat-servicios="{{ contrato.catServicios }}"  
+                    data-cat-servicios-display="{{ contrato.get_catServicios_display }}" 
                     data-proyecto="{{ contrato.proyecto.id }}" 
-                    data-razon="{{ contrato.proyecto.razon.id }}" 
+                    data-razon="{{ contrato.proyecto.razon.id }}"
+                    data-sector="{{ contrato.proyecto.sector }}"
+                    data-sector-display="{{ contrato.proyecto.get_sector_display }}" 
                     data-fecha-inicio="{{ contrato.fechaInicio.day }}-{{ contrato.fechaInicio.month }}-{{ contrato.fechaInicio.year }}"
                     {% if contrato.fechaFin %}
                         data-fecha-fin="{{ contrato.fechaFin.day }}-{{ contrato.fechaFin.month }}-{{ contrato.fechaFin.year }}"
                     {% else %}
                         data-fecha-fin="En curso"
                     {% endif %}
+                    data-localizacion="{{ contrato.proyecto.localizacion.all|join:', ' }}"
+                    data-contacto-nombre="{{ contrato.proyecto.contacto_nombre }}"
+                    data-contacto-telefono="{{ contrato.proyecto.contacto_telefono }}"
+                    data-contacto-mail="{{ contrato.proyecto.contacto_mail }}"
+                    data-ficha="{{ contrato.ficha }}"
+                    data-atestado="{{ contrato.atestado }}"
+                    data-empleados="{% for contrato_empleado in contrato.contratoempleado_set.all %}{{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}; {% endfor %}"
                 >
                     <td>{{ forloop.counter }}</td>
                     <td>{{ contrato.codigo }}</td>
@@ -119,6 +139,7 @@
             </tbody>
         </table>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -128,6 +149,7 @@
         const codigoFilter = $("#codigo-filter").val().toUpperCase();
         const catServiciosFilter = $("#cat-servicios-filter").val();
         const proyectoFilter = $("#proyecto-filter").val();
+        const sectorFilter = $("#sector-filter").val();
         
         const diaInicioFilter = $("#dia-inicio-filter").val();
         const mesInicioFilter = $("#mes-inicio-filter").val();
@@ -145,16 +167,18 @@
             const proyecto = $row.data("proyecto");
             const fechaInicio = $row.data("fecha-inicio");
             const fechaFin = $row.data("fecha-fin");
+            const sector = $row.data("sector");
 
             // Verificar si el contrato coincide con los filtros seleccionados
             const codigoMatch = codigo.includes(codigoFilter);
             const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
+            const sectorMatch = sectorFilter === "" || sector === sectorFilter;
             const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
             const fechaInicioMatch = verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter);
             const fechaFinMatch = verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter);
 
             // Ocultar o mostrar la fila según los filtros
-            if (codigoMatch && catServiciosMatch && proyectoMatch && fechaInicioMatch && fechaFinMatch) {
+            if (codigoMatch && catServiciosMatch && sectorMatch && proyectoMatch && fechaInicioMatch && fechaFinMatch) {
                 $row.show();
             } else {
                 $row.hide();
@@ -228,7 +252,60 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
+
+    function exportarExcel() {
+        const contratosFiltrados = [];
+        $("#contratos-table tbody tr:visible").each(function () {
+            const codigo = $(this).data("codigo");
+            const catServicios = $(this).data("cat-servicios-display");
+            const proyecto = $(this).data("proyecto");
+            const fechaInicio = $(this).data("fecha-inicio");
+            const fechaFin = $(this).data("fecha-fin");
+            const razon = $(this).data("razon");
+            const sector = $(this).data("sector-display");
+            const localizacion = $(this).data("localizacion");
+            const contactoNombre = $(this).data("contacto-nombre");
+            const contactoTelefono = $(this).data("contacto-telefono");
+            const contactoMail = $(this).data("contacto-mail");
+            const ficha = $(this).data("ficha");
+            const atestado = $(this).data("atestado");
+            const empleados = $(this).data("empleados");
+
+            contratosFiltrados.push({
+                Código: codigo,
+                "Fecha Inicio": fechaInicio,
+                "Fecha Fin": fechaFin,
+                Nombre: proyecto,
+                "Razón Social": razon,
+                "Categoría de Servicios": catServicios,
+                Sector: sector,
+                "Localización": localizacion,
+                "Nombre contacto": contactoNombre,
+                "Telefono contacto": contactoTelefono,
+                "eMail contacto": contactoMail,
+                Ficha: ficha,
+                Atestado: atestado,
+                Roles: empleados
+            });
+        });
+
+        // Crear un libro de trabajo de Excel
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(contratosFiltrados);
+
+        // Agregar la hoja de trabajo al libro
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Contratos Filtrados");
+
+        // Guardar el libro en un archivo Excel
+        XLSX.writeFile(workbook, "contratos_filtrados.xlsx");
+    }
+
+    // Agregar el evento click al botón de exportación
+    $("#exportar-excel").on("click", function () {
+        exportarExcel();
+    });
+
 </script>
 
 {% endblock %}
