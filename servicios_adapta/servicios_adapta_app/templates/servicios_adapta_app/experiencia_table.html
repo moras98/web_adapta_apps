@@ -1,28 +1,32 @@
 {% extends './base.html' %}
 {% block title %}Experiencia-Tabla{% endblock %}
 {% block content %}
-<div class="tableForm">
-    <div class="top-section">
+<div class="tableForm" id="experiencia-menu">
+    <div class="experiencia-top">
         <h1>Experiencias</h1>
         <div class="filters">
             <h2>Filtros</h2>
             <!-- Filtrado por codigo -->
             <label for="codigo-filter" class="title">Filtrar por Código:</label>
-            <input type="text" id="codigo-filter"><br>
+            <input type="text" id="codigo-filter">
             <!-- Filtrado por fehca inicio -->
             <label for="dia-inicio-filter" class="title">Filtrar por fecha de inicio:</label>
-            <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
-            <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
-            <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4"><br>
+            <div>
+                <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
+                <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
+                <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4">
+            </div>
             <!-- Filtrado por fecha fin -->
             <label for="dia-fin-filter" class="title">Filtrar por Fecha Fin:</label>
-            <input type="text" id="dia-fin-filter" placeholder="Dia">
-            <input type="text" id="mes-fin-filter" placeholder="Mes">
-            <input type="text" id="ano-fin-filter" placeholder="Año">
-            <select id="en-curso-filter">
-                <option value="">Todo</option>
-                <option value="en_curso">En curso</option>
-            </select><br>
+            <div>
+                <input type="text" id="dia-fin-filter" placeholder="Dia">
+                <input type="text" id="mes-fin-filter" placeholder="Mes">
+                <input type="text" id="ano-fin-filter" placeholder="Año">
+                <select id="en-curso-filter">
+                    <option value="">Todo</option>
+                    <option value="en_curso">En curso</option>
+                </select>
+            </div>
             <!-- Filtrado proyecto -->
             <label for="proyecto-filter" class="title">Filtrar por Nombre:</label>
             <select id="proyecto-filter">
@@ -30,7 +34,7 @@
                 {% for proyecto in proyectos %}
                     <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
                 {% endfor %}
-            </select><br>
+            </select>
             <!-- Filtrado razon social -->
             <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
             <select id="razon-filter">
@@ -38,7 +42,7 @@
                 {% for razon in razones %}
                     <option value="{{ razon.id }}">{{ razon.nombre }}</option>
                 {% endfor %}
-            </select><br>
+            </select>
             <!-- Filtrado por categoria -->
             <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
             <select id="cat-servicios-filter">
@@ -46,7 +50,7 @@
                 {% for choice in CAT_CHOICES %}
                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                 {% endfor %}
-            </select><br>
+            </select>
             <!-- Filtrado por sector -->
             <label for="sector-filter" class="title">Filtrar por Sector:</label>
             <select id="sector-filter">
@@ -54,7 +58,7 @@
                 {% for choice in SECTOR_CHOICES %}
                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                 {% endfor %}
-            </select><br>
+            </select>
             <!-- Filtrado por localizacion -->
             <label for="localizacion-filter" class="title">Filtrar por Localización:</label>
             <select id="localizacion-filter">
@@ -66,9 +70,9 @@
                     <option value="{{ choice }}">{{ choice }}</option>
                     {% endif %}
                 {% endfor %}
-            </select><br>
+            </select>
         </div>
-        <div class="sub-section">
+        <div class="experiencia-sub-section">
             <!-- Exportar a excel -->
             <a id="exportar-excel">Exportar a Excel</a>
             <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
