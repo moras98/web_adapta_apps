@@ -108,8 +108,10 @@
                 <tr data-codigo="{{ contrato.codigo }}"
                     data-cat-servicios="{{ contrato.catServicios }}"  
                     data-cat-servicios-display="{{ contrato.get_catServicios_display }}" 
-                    data-proyecto="{{ contrato.proyecto.id }}" 
+                    data-proyecto="{{ contrato.proyecto.id }}"
+                    data-proyecto-nombre="{{ contrato.proyecto.nombre }}" 
                     data-razon="{{ contrato.proyecto.razon.id }}"
+                    data-razon-nombre="{{ contrato.proyecto.razon.nombre }}"
                     data-sector="{{ contrato.proyecto.sector }}"
                     data-sector-display="{{ contrato.proyecto.get_sector_display }}" 
                     data-fecha-inicio="{{ contrato.fechaInicio.day }}-{{ contrato.fechaInicio.month }}-{{ contrato.fechaInicio.year }}"
@@ -182,12 +184,14 @@
         const enCursoFilter = $("#en-curso-filter").val();
 
         const localizacionFilter = $("#localizacion-filter").val();
+        const razonFilter = $("#razon-filter").val()
 
         $("#contratos-table tbody tr").each(function () {
             const $row = $(this);
             const codigo = $row.data("codigo").toUpperCase();
             const catServicios = $row.data("cat-servicios");
             const proyecto = $row.data("proyecto");
+            const razon = $row.data("razon");
             const fechaInicio = $row.data("fecha-inicio");
             const fechaFin = $row.data("fecha-fin");
             const sector = $row.data("sector");
@@ -197,13 +201,14 @@
             const codigoMatch = codigo.includes(codigoFilter);
             const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
             const sectorMatch = sectorFilter === "" || sector === sectorFilter;
+            const razonMatch = razonFilter === "" || razon === parseInt(razonFilter);
             const localizacionMatch = localizacionFilter === "" || localizacion.includes(localizacionFilter);
             const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
             const fechaInicioMatch = verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter);
             const fechaFinMatch = verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter);
 
             // Ocultar o mostrar la fila según los filtros
-            if (codigoMatch && catServiciosMatch && sectorMatch && proyectoMatch && localizacionMatch && fechaInicioMatch && fechaFinMatch) {
+            if (codigoMatch && catServiciosMatch && sectorMatch && razonMatch && proyectoMatch && localizacionMatch && fechaInicioMatch && fechaFinMatch) {
                 $row.show();
             } else {
                 $row.hide();
@@ -277,17 +282,17 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
 
     function exportarExcel() {
         const contratosFiltrados = [];
         $("#contratos-table tbody tr:visible").each(function () {
             const codigo = $(this).data("codigo");
             const catServicios = $(this).data("cat-servicios-display");
-            const proyecto = $(this).data("proyecto");
+            const proyecto = $(this).data("proyecto-nombre");
             const fechaInicio = $(this).data("fecha-inicio");
             const fechaFin = $(this).data("fecha-fin");
-            const razon = $(this).data("razon");
+            const razon = $(this).data("razon-nombre");
             const sector = $(this).data("sector-display");
             const localizacion = $(this).data("localizacion");
             const contactoNombre = $(this).data("contacto-nombre");
