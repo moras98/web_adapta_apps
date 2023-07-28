@@ -401,7 +401,11 @@ def experienciaTabla(request):
     if request.user.is_authenticated:
         contratos = experienciaContrato.objects.all()
 
-        return render(request, './servicios_adapta_app/experiencia_table.html', context={'contratos': contratos})
+        return render(request, './servicios_adapta_app/experiencia_table.html', context={
+            'contratos': contratos, 
+            'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
+            'proyectos': experienciaProyecto.objects.all()
+            })
     else:
         return redirect('login')
     

@@ -4,12 +4,33 @@
 <div class="tableForm">
     <div class="top-section">
         <h1>Experiencias</h1>
+        <div class="filters">
+            <label for="codigo-filter" class="title">Filtrar por Código:</label>
+            <input type="text" id="codigo-filter">
+            <br>
+            <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
+            <select id="cat-servicios-filter">
+                <option value="">Todos</option>
+                {% for choice in CAT_CHOICES %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="proyecto-filter" class="title">Filtrar por Proyecto:</label>
+            <select id="proyecto-filter">
+                <option value="">Todos</option>
+                {% for proyecto in proyectos %}
+                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                {% endfor %}
+            </select>
+            <br>
+        </div>
         <div class="sub-section">
             <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
         </div>
     </div>
     <div class="table-section">
-        <table>
+        <table id="contratos-table">
             <thead>
                 <tr>
                     <th></th>
@@ -32,7 +53,7 @@
             </thead>
             <tbody>
                 {% for contrato in contratos %}
-                <tr>
+                <tr data-codigo="{{ contrato.codigo }}" data-cat-servicios="{{ contrato.catServicios }}" data-proyecto="{{ contrato.proyecto.id }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
@@ -43,7 +64,7 @@
                         {% endif %}
                     </td>
                     <td>{{ contrato.proyecto.nombre }}</td>
-                    <td>{{ contrato.proyecto.razon.name }}</td>
+                    <td>{{ contrato.proyecto.razon.nombre }}</td>
                     <td>{{ contrato.get_catServicios_display }}</td>
                     <td>{{ contrato.proyecto.get_sector_display }}</td>
                     <td>{{ contrato.proyecto.localizacion.all|join:', ' }}</td>
@@ -67,4 +88,40 @@
         </table>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Función para filtrar la tabla de contratos
+        function filtrarContratos() {
+            const codigoFilter = $("#codigo-filter").val().toUpperCase();
+            const catServiciosFilter = $("#cat-servicios-filter").val();
+            const proyectoFilter = $("#proyecto-filter").val();
+
+            $("#contratos-table tbody tr").each(function () {
+                const $row = $(this);
+                const codigo = $row.data("codigo").toUpperCase();
+                const catServicios = $row.data("cat-servicios");
+                const proyecto = $row.data("proyecto");
+
+                // Verificar si el contrato coincide con los filtros seleccionados
+                const codigoMatch = codigo.includes(codigoFilter);
+                const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
+                const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
+
+                // Ocultar o mostrar la fila según los filtros
+                if (codigoMatch && catServiciosMatch && proyectoMatch) {
+                    $row.show();
+                } else {
+                    $row.hide();
+                }
+            });
+        }
+
+        // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
+        filtrarContratos();
+        $("#codigo-filter, #cat-servicios-filter, #proyecto-filter").change(filtrarContratos);
+        });
+</script>
+
 {% endblock %}
