@@ -5,9 +5,10 @@
     <div class="top-section">
         <h1>Experiencias</h1>
         <div class="filters">
+            <!-- Filtrado por codigo -->
             <label for="codigo-filter" class="title">Filtrar por Código:</label>
             <input type="text" id="codigo-filter">
-            <br>
+            <!-- Filtrado por categoria -->
             <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
             <select id="cat-servicios-filter">
                 <option value="">Todos</option>
@@ -15,7 +16,15 @@
                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <!-- Filtrado razon social -->
+            <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
+            <select id="razon-filter">
+                <option value="">Todos</option>
+                {% for razon in razones %}
+                    <option value="{{ razon.id }}">{{ razon.nombre }}</option>
+                {% endfor %}
+            </select>
+            <!-- Filtrado proyecto -->
             <label for="proyecto-filter" class="title">Filtrar por Proyecto:</label>
             <select id="proyecto-filter">
                 <option value="">Todos</option>
@@ -23,7 +32,20 @@
                     <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
                 {% endfor %}
             </select>
-            <br>
+            <!-- Filtrado por fehca inicio -->
+            <label for="dia-inicio-filter" class="title">Filtrar por fecha de inicio:</label>
+            <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
+            <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
+            <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4">
+            <!-- Filtrado por fecha fin -->
+            <label for="dia-fin-filter" class="title">Filtrar por Fecha Fin:</label>
+            <input type="text" id="dia-fin-filter" placeholder="Dia">
+            <input type="text" id="mes-fin-filter" placeholder="Mes">
+            <input type="text" id="ano-fin-filter" placeholder="Año">
+            <select id="en-curso-filter">
+                <option value="">Todo</option>
+                <option value="en_curso">En curso</option>
+            </select>
         </div>
         <div class="sub-section">
             <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
@@ -53,7 +75,17 @@
             </thead>
             <tbody>
                 {% for contrato in contratos %}
-                <tr data-codigo="{{ contrato.codigo }}" data-cat-servicios="{{ contrato.catServicios }}" data-proyecto="{{ contrato.proyecto.id }}">
+                <tr data-codigo="{{ contrato.codigo }}" 
+                    data-cat-servicios="{{ contrato.catServicios }}" 
+                    data-proyecto="{{ contrato.proyecto.id }}" 
+                    data-razon="{{ contrato.proyecto.razon.id }}" 
+                    data-fecha-inicio="{{ contrato.fechaInicio.day }}-{{ contrato.fechaInicio.month }}-{{ contrato.fechaInicio.year }}"
+                    {% if contrato.fechaFin %}
+                        data-fecha-fin="{{ contrato.fechaFin.day }}-{{ contrato.fechaFin.month }}-{{ contrato.fechaFin.year }}"
+                    {% else %}
+                        data-fecha-fin="En curso"
+                    {% endif %}
+                >
                     <td>{{ forloop.counter }}</td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
@@ -91,37 +123,112 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // Función para filtrar la tabla de contratos
-        function filtrarContratos() {
-            const codigoFilter = $("#codigo-filter").val().toUpperCase();
-            const catServiciosFilter = $("#cat-servicios-filter").val();
-            const proyectoFilter = $("#proyecto-filter").val();
+    // Función para filtrar la tabla de contratos
+    function filtrarContratos() {
+        const codigoFilter = $("#codigo-filter").val().toUpperCase();
+        const catServiciosFilter = $("#cat-servicios-filter").val();
+        const proyectoFilter = $("#proyecto-filter").val();
+        
+        const diaInicioFilter = $("#dia-inicio-filter").val();
+        const mesInicioFilter = $("#mes-inicio-filter").val();
+        const anoInicioFilter = $("#ano-inicio-filter").val();
 
-            $("#contratos-table tbody tr").each(function () {
-                const $row = $(this);
-                const codigo = $row.data("codigo").toUpperCase();
-                const catServicios = $row.data("cat-servicios");
-                const proyecto = $row.data("proyecto");
+        const diaFinFilter = $("#dia-fin-filter").val();
+        const mesFinFilter = $("#mes-fin-filter").val();
+        const anoFinFilter = $("#ano-fin-filter").val();
+        const enCursoFilter = $("#en-curso-filter").val();
 
-                // Verificar si el contrato coincide con los filtros seleccionados
-                const codigoMatch = codigo.includes(codigoFilter);
-                const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
-                const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
+        $("#contratos-table tbody tr").each(function () {
+            const $row = $(this);
+            const codigo = $row.data("codigo").toUpperCase();
+            const catServicios = $row.data("cat-servicios");
+            const proyecto = $row.data("proyecto");
+            const fechaInicio = $row.data("fecha-inicio");
+            const fechaFin = $row.data("fecha-fin");
 
-                // Ocultar o mostrar la fila según los filtros
-                if (codigoMatch && catServiciosMatch && proyectoMatch) {
-                    $row.show();
-                } else {
-                    $row.hide();
-                }
-            });
+            // Verificar si el contrato coincide con los filtros seleccionados
+            const codigoMatch = codigo.includes(codigoFilter);
+            const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
+            const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
+            const fechaInicioMatch = verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter);
+            const fechaFinMatch = verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter);
+
+            // Ocultar o mostrar la fila según los filtros
+            if (codigoMatch && catServiciosMatch && proyectoMatch && fechaInicioMatch && fechaFinMatch) {
+                $row.show();
+            } else {
+                $row.hide();
+            }
+        });
+    }
+
+    // Función para verificar si una fecha de inicio coincide con los filtros de fecha de inicio
+    function verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter) {
+        if (!diaInicioFilter && !mesInicioFilter && !anoInicioFilter) {
+            return true;
         }
 
-        // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
-        filtrarContratos();
-        $("#codigo-filter, #cat-servicios-filter, #proyecto-filter").change(filtrarContratos);
-        });
+        const fechaInicioParts = fechaInicio.split("-");
+        const diaInicio = fechaInicioParts[0];
+        const mesInicio = fechaInicioParts[1];
+        const anoInicio = fechaInicioParts[2];
+        
+
+        if (diaInicioFilter && diaInicioFilter !== diaInicio) {
+            return false;
+        }
+
+        if (mesInicioFilter && mesInicioFilter !== mesInicio) {
+            return false;
+        }
+
+        if (anoInicioFilter && anoInicioFilter !== anoInicio) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Función para verificar si una fecha de fin coincide con los filtros de fecha de fin
+    function verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter) {
+        if (enCursoFilter === "en_curso") {
+            return fechaFin === "En curso";
+        }
+
+        if (!diaFinFilter && !mesFinFilter && !anoFinFilter) {
+            return true;
+        }
+
+        if (fechaFin === "En curso") {
+            return false;
+        }
+
+        const fechaFinParts = fechaFin.split("-");
+        const diaFin = fechaFinParts[0];
+        const mesFin = fechaFinParts[1];
+        const anoFin = fechaFinParts[2];
+
+        console.log(diaFin);
+        console.log(fechaFin);
+
+        if (diaFinFilter && diaFinFilter !== diaFin) {
+            return false;
+        }
+
+        if (mesFinFilter && mesFinFilter !== mesFin) {
+            return false;
+        }
+
+        if (anoFinFilter && anoFinFilter !== anoFin) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
+    filtrarContratos();
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
 </script>
 
 {% endblock %}
