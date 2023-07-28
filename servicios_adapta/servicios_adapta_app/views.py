@@ -406,7 +406,8 @@ def experienciaTabla(request):
             'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
             'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES,
             'proyectos': experienciaProyecto.objects.all(),
-            'razones': experienciaRazonSocial.objects.all()
+            'razones': experienciaRazonSocial.objects.all(),
+            'localizaciones': experienciaLocalizaciones.objects.all()
             })
     else:
         return redirect('login')

@@ -8,43 +8,13 @@
             <!-- Filtrado por codigo -->
             <label for="codigo-filter" class="title">Filtrar por Código:</label>
             <input type="text" id="codigo-filter">
-            <!-- Filtrado por categoria -->
-            <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
-            <select id="cat-servicios-filter">
-                <option value="">Todos</option>
-                {% for choice in CAT_CHOICES %}
-                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado por sector -->
-            <label for="sector-filter" class="title">Filtrar por Sector:</label>
-            <select id="sector-filter">
-                <option value="">Todos</option>
-                {% for choice in SECTOR_CHOICES %}
-                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado razon social -->
-            <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
-            <select id="razon-filter">
-                <option value="">Todos</option>
-                {% for razon in razones %}
-                    <option value="{{ razon.id }}">{{ razon.nombre }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado proyecto -->
-            <label for="proyecto-filter" class="title">Filtrar por Proyecto:</label>
-            <select id="proyecto-filter">
-                <option value="">Todos</option>
-                {% for proyecto in proyectos %}
-                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
-                {% endfor %}
-            </select>
+
             <!-- Filtrado por fehca inicio -->
             <label for="dia-inicio-filter" class="title">Filtrar por fecha de inicio:</label>
             <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
             <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
             <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4">
+
             <!-- Filtrado por fecha fin -->
             <label for="dia-fin-filter" class="title">Filtrar por Fecha Fin:</label>
             <input type="text" id="dia-fin-filter" placeholder="Dia">
@@ -54,6 +24,56 @@
                 <option value="">Todo</option>
                 <option value="en_curso">En curso</option>
             </select>
+
+            <!-- Filtrado proyecto -->
+            <label for="proyecto-filter" class="title">Filtrar por Nombre:</label>
+            <select id="proyecto-filter">
+                <option value="">Todos</option>
+                {% for proyecto in proyectos %}
+                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Filtrado razon social -->
+            <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
+            <select id="razon-filter">
+                <option value="">Todos</option>
+                {% for razon in razones %}
+                    <option value="{{ razon.id }}">{{ razon.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Filtrado por categoria -->
+            <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
+            <select id="cat-servicios-filter">
+                <option value="">Todos</option>
+                {% for choice in CAT_CHOICES %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Filtrado por sector -->
+            <label for="sector-filter" class="title">Filtrar por Sector:</label>
+            <select id="sector-filter">
+                <option value="">Todos</option>
+                {% for choice in SECTOR_CHOICES %}
+                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            
+            <!-- Filtrado por localizacion -->
+            <label for="localizacion-filter" class="title">Filtrar por Localización:</label>
+            <select id="localizacion-filter">
+                <option value="">Todos</option>
+                {% for choice in localizaciones %}
+                    {% if choice.pais != 'Internacional' %}
+                    <option value="{{ choice.departamento }}">{{ choice }}</option>
+                    {% else %}
+                    <option value="{{ choice }}">{{ choice }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
             <!-- Exportar a excel -->
             <button id="exportar-excel">Exportar a Excel</button>
         </div>
@@ -98,7 +118,8 @@
                     {% else %}
                         data-fecha-fin="En curso"
                     {% endif %}
-                    data-localizacion="{{ contrato.proyecto.localizacion.all|join:', ' }}"
+                    data-localizaciones="{% for localizacion in contrato.proyecto.localizacion.all %}{% if localizacion.pais != 'Internacional' %}{{ localizacion.departamento }}{% else %}{{ localizacion.pais }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                    data-localizacion="{{ contrato.proyecto.localizacion.all|join:'; ' }}"
                     data-contacto-nombre="{{ contrato.proyecto.contacto_nombre }}"
                     data-contacto-telefono="{{ contrato.proyecto.contacto_telefono }}"
                     data-contacto-mail="{{ contrato.proyecto.contacto_mail }}"
@@ -160,6 +181,8 @@
         const anoFinFilter = $("#ano-fin-filter").val();
         const enCursoFilter = $("#en-curso-filter").val();
 
+        const localizacionFilter = $("#localizacion-filter").val();
+
         $("#contratos-table tbody tr").each(function () {
             const $row = $(this);
             const codigo = $row.data("codigo").toUpperCase();
@@ -168,17 +191,19 @@
             const fechaInicio = $row.data("fecha-inicio");
             const fechaFin = $row.data("fecha-fin");
             const sector = $row.data("sector");
+            const localizacion = $row.data("localizaciones");
 
             // Verificar si el contrato coincide con los filtros seleccionados
             const codigoMatch = codigo.includes(codigoFilter);
             const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
             const sectorMatch = sectorFilter === "" || sector === sectorFilter;
+            const localizacionMatch = localizacionFilter === "" || localizacion.includes(localizacionFilter);
             const proyectoMatch = proyectoFilter === "" || proyecto === parseInt(proyectoFilter);
             const fechaInicioMatch = verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter);
             const fechaFinMatch = verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter);
 
             // Ocultar o mostrar la fila según los filtros
-            if (codigoMatch && catServiciosMatch && sectorMatch && proyectoMatch && fechaInicioMatch && fechaFinMatch) {
+            if (codigoMatch && catServiciosMatch && sectorMatch && proyectoMatch && localizacionMatch && fechaInicioMatch && fechaFinMatch) {
                 $row.show();
             } else {
                 $row.hide();
@@ -252,7 +277,7 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
 
     function exportarExcel() {
         const contratosFiltrados = [];
