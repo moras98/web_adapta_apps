@@ -12,7 +12,15 @@
 }
 
 .experiencia-top h1 {
-    margin: 10px;
+    margin-bottom: 10px;
+}
+
+.div-atras {
+    padding-left: 10px;
+    padding-top: 10px;
+    display: flex;
+    justify-content: start;
+    width: 100%;
 }
 
 .filters {
@@ -36,7 +44,7 @@
     margin: 10px;
 }
 
-.experiencia-sub-section a {
+.experiencia-sub-section a, .boton-atras {
     text-decoration: none;
     color: white;
     font-weight: bold;
@@ -47,7 +55,7 @@
     transition: background-color .2s;
 }
 
-.experiencia-sub-section a:hover {
+.experiencia-sub-section a:hover, .boton-atras:hover {
     color: black;
     background-color: white;
 }

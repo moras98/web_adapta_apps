@@ -3,21 +3,24 @@
 {% block content %}
 <div class="tableForm" id="experiencia-menu">
     <div class="experiencia-top">
+        <div class="div-atras">
+            <a class="boton-atras" href="{% url 'menu-experiencia' %}"> <- Atrás</a>
+        </div>
         <h1>Experiencias</h1>
         <div class="filters">
             <h2>Filtros</h2>
             <!-- Filtrado por codigo -->
-            <label for="codigo-filter" class="title">Filtrar por Código:</label>
+            <label for="codigo-filter" class="title">Código:</label>
             <input type="text" id="codigo-filter">
             <!-- Filtrado por fehca inicio -->
-            <label for="dia-inicio-filter" class="title">Filtrar por fecha de inicio:</label>
+            <label for="dia-inicio-filter" class="title">Fecha de inicio:</label>
             <div>
                 <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
                 <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
                 <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4">
             </div>
             <!-- Filtrado por fecha fin -->
-            <label for="dia-fin-filter" class="title">Filtrar por Fecha Fin:</label>
+            <label for="dia-fin-filter" class="title">Fecha Fin:</label>
             <div>
                 <input type="text" id="dia-fin-filter" placeholder="Dia">
                 <input type="text" id="mes-fin-filter" placeholder="Mes">
@@ -27,50 +30,55 @@
                     <option value="en_curso">En curso</option>
                 </select>
             </div>
-            <!-- Filtrado proyecto -->
-            <label for="proyecto-filter" class="title">Filtrar por Nombre:</label>
-            <select id="proyecto-filter">
-                <option value="">Todos</option>
-                {% for proyecto in proyectos %}
-                    <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado razon social -->
-            <label for="razon-filter" class="title">Filtrar por Razon Social:</label>
-            <select id="razon-filter">
-                <option value="">Todos</option>
-                {% for razon in razones %}
-                    <option value="{{ razon.id }}">{{ razon.nombre }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado por categoria -->
-            <label for="cat-servicios-filter" class="title">Filtrar por Categoría de Servicios:</label>
-            <select id="cat-servicios-filter">
-                <option value="">Todos</option>
-                {% for choice in CAT_CHOICES %}
-                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado por sector -->
-            <label for="sector-filter" class="title">Filtrar por Sector:</label>
-            <select id="sector-filter">
-                <option value="">Todos</option>
-                {% for choice in SECTOR_CHOICES %}
-                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                {% endfor %}
-            </select>
-            <!-- Filtrado por localizacion -->
-            <label for="localizacion-filter" class="title">Filtrar por Localización:</label>
-            <select id="localizacion-filter">
-                <option value="">Todos</option>
-                {% for choice in localizaciones %}
-                    {% if choice.pais != 'Internacional' %}
-                    <option value="{{ choice.departamento }}">{{ choice }}</option>
-                    {% else %}
-                    <option value="{{ choice }}">{{ choice }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
+
+            <div style="margin-top: 10px;">
+                <!-- Filtrado proyecto -->
+                <label for="proyecto-filter" class="title">Nombre:</label>
+                <select id="proyecto-filter">
+                    <option value="">Todos</option>
+                    {% for proyecto in proyectos %}
+                        <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Filtrado razon social -->
+                <label for="razon-filter" class="title">Razon Social:</label>
+                <select id="razon-filter">
+                    <option value="">Todos</option>
+                    {% for razon in razones %}
+                        <option value="{{ razon.id }}">{{ razon.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-top: 10px;">
+                <!-- Filtrado por categoria -->
+                <label for="cat-servicios-filter" class="title">Categoría de Servicios:</label>
+                <select id="cat-servicios-filter">
+                    <option value="">Todos</option>
+                    {% for choice in CAT_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Filtrado por sector -->
+                <label for="sector-filter" class="title">Sector:</label>
+                <select id="sector-filter">
+                    <option value="">Todos</option>
+                    {% for choice in SECTOR_CHOICES %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Filtrado por localizacion -->
+                <label for="localizacion-filter" class="title">Localización:</label>
+                <select id="localizacion-filter">
+                    <option value="">Todos</option>
+                    {% for choice in localizaciones %}
+                        {% if choice.pais != 'Internacional' %}
+                        <option value="{{ choice.departamento }}">{{ choice }}</option>
+                        {% else %}
+                        <option value="{{ choice }}">{{ choice }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="experiencia-sub-section">
             <!-- Exportar a excel -->

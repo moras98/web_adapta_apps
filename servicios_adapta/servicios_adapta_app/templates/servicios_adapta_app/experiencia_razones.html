@@ -3,9 +3,12 @@
 {% block content %}
 <div class="tableForm">
     <div class="top-section">
-        <h1>Razones Sociales</h1>
+        <div class="div-atras">
+            <a class="boton-atras" href="{% url 'menu-experiencia' %}"> <- Atrás</a>
+        </div>
+        <h1 style="margin-bottom: 10px; margin-top: 0;">Razones Sociales</h1>
         <div class="sub-section">
-            <a href="{% url 'experiencia-razones-agregar' %}">Agregar Razón Social</a>
+            <a href="{% url 'experiencia-razones-agregar' %}" style="margin-bottom: 10px;">Agregar Razón Social</a>
         </div>
     </div>
     <div class="table-section">
