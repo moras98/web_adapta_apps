@@ -5,7 +5,7 @@ from django.db import IntegrityError, transaction
 import os
 import pandas as pd
 import openpyxl as xl
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from airfilter import process
 from results_ef_fo import pasar_resultados_effo
 from django.contrib.auth.models import User
@@ -411,7 +411,7 @@ def experienciaTabla(request):
             })
     else:
         return redirect('login')
-    
+        
 def add_contrato(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
