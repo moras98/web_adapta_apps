@@ -32,20 +32,20 @@
             </div>
 
             <div style="margin-top: 10px;">
-                <!-- Filtrado proyecto -->
-                <label for="proyecto-filter" class="title">Nombre:</label>
-                <select id="proyecto-filter">
-                    <option value="">Todos</option>
-                    {% for proyecto in proyectos %}
-                        <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
-                    {% endfor %}
-                </select>
                 <!-- Filtrado razon social -->
                 <label for="razon-filter" class="title">Razon Social:</label>
                 <select id="razon-filter">
                     <option value="">Todos</option>
                     {% for razon in razones %}
                         <option value="{{ razon.id }}">{{ razon.nombre }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Filtrado proyecto -->
+                <label for="proyecto-filter" class="title">Nombre:</label>
+                <select id="proyecto-filter">
+                    <option value="">Todos</option>
+                    {% for proyecto in proyectos %}
+                        <option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -340,7 +340,7 @@
     $("#exportar-excel").on("click", function () {
         exportarExcel();
     });
-
+    
 </script>
 
 {% endblock %}
