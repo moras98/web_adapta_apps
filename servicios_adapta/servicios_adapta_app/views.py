@@ -492,7 +492,8 @@ def add_contrato(request):
                 'proyectos': experienciaProyecto.objects.all(),
                 'empleados': experienciaEmpleado.objects.all(),
                 'roles': experienciaRol.objects.all(),
-                'CAT_CHOICES': experienciaContrato.CAT_CHOICES
+                'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
+                'razones': experienciaRazonSocial.objects.all()
             })
     else:
         return redirect('login')
@@ -600,3 +601,13 @@ def borrar_contrato(request, contrato_id):
         return redirect('experiencia-tabla')  # Redireccionar a la vista de la tabla de contratos
 
     return render(request, './servicios_adapta_app/experiencia_contrato_borrar.html', {'contrato': contrato})
+
+
+def proyectos_filtrados(request):
+    if request.method == 'GET' and 'razon_social_id' in request.GET:
+        razon_social_id = request.GET['razon_social_id']
+        # Filtrar los proyectos según la razón social seleccionada
+        proyectos_filtrados = experienciaProyecto.objects.filter(razon__id=razon_social_id).values('id', 'nombre')
+        return JsonResponse(list(proyectos_filtrados), safe=False)
+    else:
+        return JsonResponse([], safe=False)

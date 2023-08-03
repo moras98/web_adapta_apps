@@ -74,3 +74,16 @@ input[type=file] {
     color: black;
     /* padding: 5px; */
 }
+
+/* Estilos para la tabla */
+#empleados-table {
+    margin: 0 auto; /* Centrar horizontalmente la tabla */
+}
+
+/* Estilos para el contenedor de la tabla */
+#empleados-table-container {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    background-color: transparent;
+    box-shadow: none;
+}

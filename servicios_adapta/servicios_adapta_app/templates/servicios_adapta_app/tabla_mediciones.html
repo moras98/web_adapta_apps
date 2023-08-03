@@ -4,6 +4,9 @@
 {% block content %}
 <div class="tableForm">
     <div class="top-section">
+        <div class="div-atras">
+            <a class="boton-atras" href="{% url 'menu-ruido' %}"> <- Atrás</a>
+        </div>
         <h1>Tabla de Mediciones</h1>
         <div class="sub-section">
             <form method="GET" action="{% url 'tabla_mediciones' %}">
