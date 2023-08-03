@@ -343,4 +343,67 @@
     
 </script>
 
+<script>
+    $(document).ready(function () {
+        // Evento change para el select de razones sociales
+        $("#razon-filter").on("change", function () {
+            const razonSocialId = $(this).val(); // Obtener el ID de la razón social seleccionada
+
+            // Verificar si la opción seleccionada es "Todos"
+            if (razonSocialId === "") {
+                // Si es "Todos", mostrar todos los proyectos disponibles en el select de proyectos
+                mostrarTodosLosProyectos();
+            } else {
+                // Si no es "Todos", realizar la petición AJAX para obtener los proyectos filtrados
+                $.ajax({
+                    url: "/experiencia/proyectos_filtrados/", // URL de la vista proyectos_filtrados en Django
+                    type: "GET",
+                    data: { razon_social_id: razonSocialId },
+                    dataType: "json",
+                    success: function (response) {
+                        // Obtener el select de proyectos
+                        const proyectosSelect = $("#proyecto-filter");
+
+                        // Limpiar las opciones anteriores del select de proyectos
+                        proyectosSelect.empty();
+
+                        // Agregar la opción "Todos" al select de proyectos
+                        proyectosSelect.append('<option value="">Todos</option>');
+
+                        // Agregar las opciones filtradas al select de proyectos
+                        response.forEach(function (proyecto) {
+                            proyectosSelect.append('<option value="' + proyecto.id + '">' + proyecto.nombre + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al obtener los proyectos:", xhr);
+                    },
+                });
+            }
+        });
+
+        // Función para mostrar todos los proyectos disponibles en el select de proyectos
+        function mostrarTodosLosProyectos() {
+            // Obtener el select de proyectos
+            const proyectosSelect = $("#proyecto-filter");
+
+            // Limpiar las opciones anteriores del select de proyectos
+            proyectosSelect.empty();
+
+            // Agregar la opción "Todos" al select de proyectos
+            proyectosSelect.append('<option value="">Todos</option>');
+
+            // Agregar todas las opciones de proyectos disponibles en el select
+            {% for proyecto in proyectos %}
+                proyectosSelect.append('<option value="{{ proyecto.id }}">{{ proyecto.nombre }}</option>');
+            {% endfor %}
+        }
+
+        // Cuando se carga la página, forzar el evento change para mostrar todos los proyectos al inicio
+        mostrarTodosLosProyectos();
+    });
+</script>
+
+
+
 {% endblock %}
