@@ -1,27 +1,31 @@
 {% extends './base.html' %}
 {% block title %}Experiencia-Razones Sociales{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="left">
+<div>
+    <div class="container" style="height: fit-content;">
         <div class="div-atras">
             <a class="boton-atras" href="{% url 'experiencia-razones' %}"> <- Atrás</a>
         </div>
-        <h1>Razones Sociales</h1>
-        <div class="info">
-            <label class="title">Instrucciones</label>
-            <p></p>
-        </div>
     </div>
-    <div class="right">
-        <form method="POST">
-            {% csrf_token %}
-            <label for="nombre-razon" class="title">Nombre</label>
-            <br>
-            <input type="text" name="nombre-razon" required>
-            <br>
-            <br>
-            <button type="submit">Confirmar</button>
-        </form>
+    <div class="container">
+        <div class="left">
+            <h1>Razones Sociales</h1>
+            <div class="info">
+                <label class="title">Instrucciones</label>
+                <p></p>
+            </div>
+        </div>
+        <div class="right">
+            <form method="POST">
+                {% csrf_token %}
+                <label for="nombre-razon" class="title">Nombre</label>
+                <br>
+                <input type="text" name="nombre-razon" required>
+                <br>
+                <br>
+                <button type="submit">Confirmar</button>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

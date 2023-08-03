@@ -1,28 +1,36 @@
 {% extends './base.html' %}
 {% block title %}Resultados GVCFCC{% endblock %}
 {% block content %}
-<div class="container-form">
-    <div class="left">
-        <h1>Resultados GVC_FCC</h1>
-        <div class="info">
-            <label class="title">Instrucciones</label>
-            <p>Asegurarse de que todos los archivos de análisis hayan sido abiertos y guardados previamente para que los cálculos tengan efecto.<br>
-            Luego de haber seleccionado todos los archivos y generado los resultados se debe modificar el nombre del archivo y donde corresponda el mes y el año.<br>
-            En el caso del archivo de resultados para los fo, se debe de completar los campos faltantes o cambiar los valores adecuados para cada punto y anotar los puntos que no tuvieron actividad o no se midieron.<br>
-            No olvidar de registar las observaciones para cada punto medido.
-            </p>
+<div>
+    <div class="container" style="height: fit-content;">
+        <div class="div-atras">
+            <a class="boton-atras" href="{% url 'menu-ruido' %}"> <- Atrás</a>
         </div>
     </div>
-    <div class="right">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div>
-                <label  for="input_file" class="title">Seleccione Análisis de Datos</label>
-                <br>
-                <input class="input-button" type="file" name="input_files" accept=".xlsx" multiple required>
+    <div class="container-form">
+        <div class="left">
+            <h1>Resultados GVC_FCC</h1>
+            <div class="info">
+                <label class="title">Instrucciones</label>
+                <p>Asegurarse de que todos los archivos de análisis hayan sido abiertos y guardados previamente para que los cálculos tengan efecto.<br>
+                Luego de haber seleccionado todos los archivos y generado los resultados se debe modificar el nombre del archivo y donde corresponda el mes y el año.<br>
+                En el caso del archivo de resultados para los fo, se debe de completar los campos faltantes o cambiar los valores adecuados para cada punto y anotar los puntos que no tuvieron actividad o no se midieron.<br>
+                No olvidar de registar las observaciones para cada punto medido.
+                </p>
             </div>
-            <button type="submit">Procesar Datos</button>
-        </form>
+        </div>
+        <div class="right">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div>
+                    <label  for="input_file" class="title">Seleccione Análisis de Datos</label>
+                    <br>
+                    <input class="input-button" type="file" name="input_files" accept=".xlsx" multiple required>
+                </div>
+                <button type="submit">Procesar Datos</button>
+            </form>
+        </div>
     </div>
 </div>
+
 {% endblock %}

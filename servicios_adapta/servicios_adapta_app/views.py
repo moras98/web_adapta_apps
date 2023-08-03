@@ -492,7 +492,8 @@ def add_contrato(request):
                 'proyectos': experienciaProyecto.objects.all(),
                 'empleados': experienciaEmpleado.objects.all(),
                 'roles': experienciaRol.objects.all(),
-                'CAT_CHOICES': experienciaContrato.CAT_CHOICES
+                'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
+                'razones': experienciaRazonSocial.objects.all()
             })
     else:
         return redirect('login')
