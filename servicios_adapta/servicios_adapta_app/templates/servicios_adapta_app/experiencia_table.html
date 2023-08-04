@@ -87,7 +87,7 @@
         </div>
     </div>
     <div class="table-section">
-        <table id="contratos-table">
+        <table id="contratos-table" style="table-layout: fixed; width: 100%">
             <thead>
                 <tr>
                     <th></th>
@@ -97,6 +97,7 @@
                     <th>Nombre</th>
                     <th>Razón Social</th>
                     <th>Categoría Servicios</th>
+                    <th>Descripción</th>
                     <th>Sector</th>
                     <th>Localización</th>
                     <th>Nombre Contacto</th>
@@ -125,6 +126,7 @@
                     {% else %}
                         data-fecha-fin="En curso"
                     {% endif %}
+                    data-descripcion = "{{ contrato.descripcion }}"
                     data-localizaciones="{% for localizacion in contrato.proyecto.localizacion.all %}{% if localizacion.pais != 'Internacional' %}{{ localizacion.departamento }}{% else %}{{ localizacion.pais }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}"
                     data-localizacion="{{ contrato.proyecto.localizacion.all|join:'; ' }}"
                     data-contacto-nombre="{{ contrato.proyecto.contacto_nombre }}"
@@ -146,6 +148,7 @@
                     <td>{{ contrato.proyecto.nombre }}</td>
                     <td>{{ contrato.proyecto.razon.nombre }}</td>
                     <td>{{ contrato.get_catServicios_display }}</td>
+                    <td style="word-wrap: break-word">{% if contrato.descripcion %}{{ contrato.descripcion }}{% else %}{{ "" }}{% endif %}</td>
                     <td>{{ contrato.proyecto.get_sector_display }}</td>
                     <td>{{ contrato.proyecto.localizacion.all|join:', ' }}</td>
                     <td>{{ contrato.proyecto.contacto_nombre }}</td>
@@ -298,6 +301,7 @@
             const fechaInicio = $(this).data("fecha-inicio");
             const fechaFin = $(this).data("fecha-fin");
             const razon = $(this).data("razon-nombre");
+            const descripcion = $(this).data("descripcion");
             const sector = $(this).data("sector-display");
             const localizacion = $(this).data("localizacion");
             const contactoNombre = $(this).data("contacto-nombre");
@@ -314,6 +318,7 @@
                 Nombre: proyecto,
                 "Razón Social": razon,
                 "Categoría de Servicios": catServicios,
+                Descripción: descripcion,
                 Sector: sector,
                 "Localización": localizacion,
                 "Nombre contacto": contactoNombre,

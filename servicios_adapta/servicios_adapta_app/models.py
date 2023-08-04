@@ -182,6 +182,7 @@ class experienciaContrato(models.Model):
     atestado = models.URLField(null=True, blank=True)
     proyecto = models.ForeignKey(experienciaProyecto, on_delete=models.CASCADE)
     empleados = models.ManyToManyField(experienciaEmpleado, through='ContratoEmpleado')
+    descripcion = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Inicio: {self.fechaInicio}, Fin: {self.fechaFin}, RS: {self.proyecto.razon.nombre}, Proyecto: {self.proyecto.nombre}"

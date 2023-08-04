@@ -444,6 +444,7 @@ def add_contrato(request):
             ficha = request.POST.get('ficha')
             atestado = request.POST.get('atestado')
             proyecto_id = request.POST.get('proyecto')
+            descripcion = request.POST.get('descripcion')
             
             # Obtener los datos de los empleados y roles seleccionados
             empleados = request.POST.getlist('empleado')
@@ -470,7 +471,8 @@ def add_contrato(request):
                         catServicios=cat_servicios,
                         ficha=ficha,
                         atestado=atestado,
-                        proyecto_id=proyecto_id
+                        proyecto_id=proyecto_id,
+                        descripcion = descripcion
                     )
 
                     # Asociar los empleados y roles con el contrato
@@ -507,6 +509,7 @@ def editar_contrato(request, contrato_id):
         roles_disponibles = experienciaRol.objects.all()  # Obtener todos los roles disponibles
         empleados_asignados = contrato.empleados.all()  # Obtener los empleados asignados al contrato
         roles_asignados = ContratoEmpleado.objects.filter(contrato=contrato)  # Obtener los roles asignados al contrato
+        descripcion = contrato.descripcion
         return render(request, './servicios_adapta_app/experiencia_contrato_editar.html', {
             'contrato': contrato,
             'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
@@ -516,6 +519,7 @@ def editar_contrato(request, contrato_id):
             'roles': roles_disponibles,
             'empleados_asignados': empleados_asignados,
             'roles_asignados': roles_asignados,
+            'descripcion': descripcion,
         })
     else:
         return redirect('login')
@@ -552,7 +556,7 @@ def guardar_contrato(request, contrato_id):
             ficha = request.POST.get('ficha')
             atestado = request.POST.get('atestado')
             proyecto_id = request.POST.get('proyecto')
-            # ... Obtener los demás campos ...
+            descripcion = request.POST.get('descripcion')
 
             # Actualizar el contrato con los nuevos valores
             contrato.fechaInicio = fecha_inicio
@@ -562,7 +566,7 @@ def guardar_contrato(request, contrato_id):
             contrato.ficha = ficha
             contrato.atestado = atestado
             contrato.proyecto_id = proyecto_id
-
+            contrato.descripcion = descripcion
             contrato.save()  # Guardar los cambios en la base de datos
 
             # Asociar los empleados y roles con el contrato

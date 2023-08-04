@@ -48,9 +48,14 @@
             </select>
             <br>
             <br>
+            <label for="descripcion" class="title">Descripción</label>
+            <br>
+            <textarea name="descripcion" rows="10" cols="50" placeholder="Ingrese una descripción aquí.">{% if contrato.descripcion %}{{ contrato.descripcion }}{% endif %}</textarea>
+            <br>
+            <br>
             <label for="ficha" class="title">Ficha</label>
             <br>
-            <input type="url" id="ficha_url" name="ficha" placeholder="Ingrese una URL válida" {% if contrato.ficha %}value="{{ contrato.ficha }}"{% endif %}">
+            <input type="url" id="ficha_url" name="ficha" placeholder="Ingrese una URL válida" {% if contrato.ficha %}value="{{ contrato.ficha }}"{% endif %}>
             <br>
             <br>
             <label for="atestado" class="title">Atestado</label>
