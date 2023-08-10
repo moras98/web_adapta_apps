@@ -79,10 +79,15 @@
                     {% endfor %}
                 </select>
             </div>
+            <div style="margin-top: 10px;">
+                <button id="seleccionar-todos">Seleccionar Todos</button>
+                <button id="deseleccionar-todos">Deseleccionar Todos</button>
+                <button id="reset-filters">Reiniciar Filtros</button>
+            </div>
         </div>
         <div class="experiencia-sub-section">
             <!-- Exportar a excel -->
-            <a id="exportar-excel">Exportar a Excel</a>
+            <a id="exportar-excel">Exportar selección a Excel</a>
             <a href="{% url 'experiencia-agregar' %}">Agregar Experiencia</a>
         </div>
     </div>
@@ -91,6 +96,7 @@
             <thead>
                 <tr>
                     <th></th>
+                    <th>Seleccionado</th>
                     <th>Código</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
@@ -100,9 +106,7 @@
                     <th>Descripción</th>
                     <th>Sector</th>
                     <th>Localización</th>
-                    <th>Nombre Contacto</th>
-                    <th>Telefono Contacto</th>
-                    <th>eMail Contacto</th>
+                    <th colspan="3">Contacto</th>
                     <th>Ficha</th>
                     <th>Atestado</th>
                     <th>Roles</th>
@@ -137,6 +141,7 @@
                     data-empleados="{% for contrato_empleado in contrato.contratoempleado_set.all %}{{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}; {% endfor %}"
                 >
                     <td>{{ forloop.counter }}</td>
+                    <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}"></td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
                     <td>{% if contrato.fechaFin %}
@@ -290,26 +295,26 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter, #reset-filters").on("keyup change", filtrarContratos);
 
-    function exportarExcel() {
+    function exportarExcel(filasMarcadas) {
         const contratosFiltrados = [];
-        $("#contratos-table tbody tr:visible").each(function () {
-            const codigo = $(this).data("codigo");
-            const catServicios = $(this).data("cat-servicios-display");
-            const proyecto = $(this).data("proyecto-nombre");
-            const fechaInicio = $(this).data("fecha-inicio");
-            const fechaFin = $(this).data("fecha-fin");
-            const razon = $(this).data("razon-nombre");
-            const descripcion = $(this).data("descripcion");
-            const sector = $(this).data("sector-display");
-            const localizacion = $(this).data("localizacion");
-            const contactoNombre = $(this).data("contacto-nombre");
-            const contactoTelefono = $(this).data("contacto-telefono");
-            const contactoMail = $(this).data("contacto-mail");
-            const ficha = $(this).data("ficha");
-            const atestado = $(this).data("atestado");
-            const empleados = $(this).data("empleados");
+        filasMarcadas.forEach(function (row) {
+            const codigo = row.data("codigo");
+            const catServicios = row.data("cat-servicios-display");
+            const proyecto = row.data("proyecto-nombre");
+            const fechaInicio = row.data("fecha-inicio");
+            const fechaFin = row.data("fecha-fin");
+            const razon = row.data("razon-nombre");
+            const descripcion = row.data("descripcion");
+            const sector = row.data("sector-display");
+            const localizacion = row.data("localizacion");
+            const contactoNombre = row.data("contacto-nombre");
+            const contactoTelefono = row.data("contacto-telefono");
+            const contactoMail = row.data("contacto-mail");
+            const ficha = row.data("ficha");
+            const atestado = row.data("atestado");
+            const empleados = row.data("empleados");
 
             contratosFiltrados.push({
                 Código: codigo,
@@ -343,9 +348,52 @@
 
     // Agregar el evento click al botón de exportación
     $("#exportar-excel").on("click", function () {
-        exportarExcel();
+        const filasMarcadas = [];
+        $("input[type='checkbox']:checked").each(function() {
+            const fila = $(this).closest("tr");
+            filasMarcadas.push(fila);
+        });
+        exportarExcel(filasMarcadas);
     });
     
+
+    $(document).ready(function() {
+        $("#exportar-excel").click(function() {
+            const filasMarcadas = [];
+            
+            $("input[type='checkbox']:checked").each(function() {
+                const fila = $(this).closest("tr");
+                filasMarcadas.push(fila);
+            });
+        });
+
+        $("#seleccionar-todos").click(function() {
+            $("tr:visible input[type='checkbox']").prop("checked", true);
+        });
+
+        $("#deseleccionar-todos").click(function() {
+            $("tr:visible input[type='checkbox']").prop("checked", false);
+        });
+
+        $("#reset-filters").click(function() {
+            // Establecer los valores de los elementos de entrada a sus valores predeterminados
+            $("#codigo-filter").val("");
+            $("#dia-inicio-filter").val("");
+            $("#mes-inicio-filter").val("");
+            $("#ano-inicio-filter").val("");
+            $("#dia-fin-filter").val("");
+            $("#mes-fin-filter").val("");
+            $("#ano-fin-filter").val("");
+            $("#en-curso-filter").val("");
+            $("#razon-filter").val("");
+            $("#proyecto-filter").val("");
+            $("#cat-servicios-filter").val("");
+            $("#sector-filter").val("");
+            $("#localizacion-filter").val("");
+
+            filtrarContratos();
+        });
+    });
 </script>
 
 <script>
