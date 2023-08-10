@@ -82,6 +82,8 @@
             <div style="margin-top: 10px;">
                 <button id="seleccionar-todos">Seleccionar Todos</button>
                 <button id="deseleccionar-todos">Deseleccionar Todos</button>
+            </div>
+            <div style="margin-top: 10px;">
                 <button id="reset-filters">Reiniciar Filtros</button>
             </div>
         </div>
@@ -141,7 +143,7 @@
                     data-empleados="{% for contrato_empleado in contrato.contratoempleado_set.all %}{{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}; {% endfor %}"
                 >
                     <td>{{ forloop.counter }}</td>
-                    <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}"></td>
+                    <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}" style="height: 20px; width: 20px;"></td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
                     <td>{% if contrato.fechaFin %}
