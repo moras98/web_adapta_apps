@@ -348,7 +348,8 @@ def borrar_razon(request, razon_id):
 def experienciaProyectos(request):
     if request.user.is_authenticated:
         proyectos = experienciaProyecto.objects.all()
-        context = {'proyectos': proyectos}
+        razones = experienciaRazonSocial.objects.all()
+        context = {'proyectos': proyectos, 'razones': razones}
         return render(request, './servicios_adapta_app/experiencia_proyectos.html', context)
     else:
         return redirect('login')

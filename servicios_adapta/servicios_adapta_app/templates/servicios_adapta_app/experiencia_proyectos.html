@@ -7,12 +7,25 @@
             <a class="boton-atras" href="{% url 'menu-experiencia' %}"> <- Atrás</a>
         </div>
         <h1 style="margin-bottom: 10px; margin-top: 0;">Proyectos</h1>
+        <div class="filters">
+            <h2>Filtros</h2>
+            <div style="margin-top: 10px;">
+                <!-- Filtrado razon social -->
+                <label for="razon-filter" class="title">Razon Social:</label>
+                <select id="razon-filter">
+                    <option value="">Todos</option>
+                    {% for razon in razones %}
+                        <option value="{{ razon.id }}">{{ razon.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
         <div class="sub-section">
             <a href="{% url 'experiencia-proyectos-agregar' %}" style="margin-bottom: 10px;">Agregar Proyecto</a>
         </div>
     </div>
     <div class="table-section">
-        <table>
+        <table id="proyectos-table">
             <thead>
                 <tr>
                     <th></th>
@@ -28,7 +41,8 @@
             </thead>
             <tbody>
                 {% for proyecto in proyectos %}
-                <tr>
+                <tr data-razon="{{ proyecto.razon.id }}"
+                    data-proyecto="{{ proyecto.id }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ proyecto.nombre }}</td>
                     <td>{{ proyecto.razon.nombre }}</td>
@@ -49,4 +63,28 @@
         </table>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function filtrarProyectos(){
+        const razonFilter = $("#razon-filter").val()
+
+        $("#proyectos-table tbody tr").each(function () {
+            const $row = $(this);
+            const proyecto = $row.data("proyecto");
+            const razon = $row.data("razon");
+
+            const razonMatch = razonFilter === "" || razon === parseInt(razonFilter);
+
+            if (razonMatch){
+                $row.show();
+            } else {
+                $row.hide();
+            }
+        });
+    };
+
+    filtrarProyectos();
+    $("#razon-filter").on("keyup change", filtrarProyectos);;
+</script>
 {% endblock %}
