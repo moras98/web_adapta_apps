@@ -14,7 +14,7 @@
                 <label class="title">Instrucciones</label>
                 <p>
                     El código es un identificador único para cada experiencia de la forma AAMM_XX.<br>
-                    Si la experiencia todavía se encuentra en curso, la fecha fin debe ser 00/00/0000, en caso contrario ingrese una fecha válida.<br>
+                    Si la experiencia todavía se encuentra en curso, la fecha fin debe ser 00/0000, en caso contrario ingrese una fecha válida.<br>
                     En descripción se ingresa un breve texto que explique cuáles fueron los servicios provistos.<br>
                     Tanto en el campo Ficha, como en el campo Atestado se debe ingresar el URL de dropbox del archivo, si es que existe.<br>
                     Razón Social permite filtrar los distintos nombres de los proyectos, pero no es necesario seleccionar una ya que esta información ya está contenida en el "proyecto".<br>
@@ -29,16 +29,14 @@
                 <input type="text" name="codigo" required>
                 <br>
                 <br>
-                <label for="dia-inicio" class="title">Fecha de Inicio (dd/mm/yyyy)</label>
+                <label for="mes-inicio" class="title">Fecha de Inicio (mm/yyyy)</label>
                 <br>
-                <input type="text" name="dia-inicio" maxlength="2" placeholder="dd" required> / 
                 <input type="text" name="mes-inicio" maxlength="2" placeholder="mm" required> / 
                 <input type="text" name="ano-inicio" maxlength="4" placeholder="aaaa" required>
                 <br>
                 <br>
-                <label for="dia-inicio" class="title">Fecha Fin (dd/mm/yyyy)</label>
+                <label for="mes-fin" class="title">Fecha Fin (mm/yyyy)</label>
                 <br>
-                <input type="text" name="dia-fin" maxlength="2"  value="00"> / 
                 <input type="text" name="mes-fin" maxlength="2"  value="00"> / 
                 <input type="text" name="ano-fin" maxlength="4"  value="0000">
                 <br>
