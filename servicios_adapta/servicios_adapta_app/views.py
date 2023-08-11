@@ -448,6 +448,7 @@ def add_contrato(request):
             ficha = request.POST.get('ficha')
             atestado = request.POST.get('atestado')
             proyecto_id = request.POST.get('proyecto')
+            proyecto = experienciaProyecto.objects.get(id=proyecto_id)
             descripcion = request.POST.get('descripcion')
             
             # Obtener los datos de los empleados y roles seleccionados
@@ -475,7 +476,7 @@ def add_contrato(request):
                         catServicios=cat_servicios,
                         ficha=ficha,
                         atestado=atestado,
-                        proyecto_id=proyecto_id,
+                        proyecto=proyecto,
                         descripcion = descripcion
                     )
 

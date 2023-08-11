@@ -49,8 +49,8 @@
                     <td>{{ proyecto.localizacion.all|join:'; ' }}</td>
                     <td>{{ proyecto.get_sector_display }}</td>
                     <td>{{ proyecto.contacto_nombre }}</td>
-                    <td>{{ proyecto.contacto_telefono }}</td>
-                    <td>{{ proyecto.contacto_mail }}</td>
+                    <td>{{ proyecto.contacto_telefono|default:"Sin telefono" }}</td>
+                    <td>{{ proyecto.contacto_mail|default:"Sin correo" }}</td>
                     <td>
                         <form method="POST" action="{% url 'borrar_proyecto' proyecto.id %}">
                             {% csrf_token %}
