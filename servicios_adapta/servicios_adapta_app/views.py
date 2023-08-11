@@ -532,7 +532,7 @@ def guardar_contrato(request, contrato_id):
 
         if request.method == 'POST':
             # Obtener los nuevos valores del formulario
-            dia_inicio = request.POST.get('dia-inicio')
+            dia_inicio = "01"
             mes_inicio = request.POST.get('mes-inicio')
             ano_inicio = request.POST.get('ano-inicio')
             fecha_inicio_str = f"{ano_inicio}-{mes_inicio}-{dia_inicio}"
@@ -543,11 +543,11 @@ def guardar_contrato(request, contrato_id):
                 # Aquí puedes agregar un mensaje de error o redirigir al usuario a una página de error
                 return HttpResponse("Error: Formato de fecha incorrecto")
             
-            dia_fin = request.POST.get('dia-fin')
+            dia_fin = "01"
             mes_fin = request.POST.get('mes-fin')
             ano_fin = request.POST.get('ano-fin')
             fecha_fin_str = f"{ano_fin}-{mes_fin}-{dia_fin}"
-            if fecha_fin_str != "0000-00-00":
+            if fecha_fin_str != "0000-00-01":
                 fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%d')
             else:
                 fecha_fin = None  # Usa None en lugar de "En curso" para el campo de fechaFin si no se selecciona una fecha válida
