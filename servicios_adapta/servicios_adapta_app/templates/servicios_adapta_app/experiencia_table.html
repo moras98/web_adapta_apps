@@ -13,16 +13,14 @@
             <label for="codigo-filter" class="title">Código:</label>
             <input type="text" id="codigo-filter">
             <!-- Filtrado por fehca inicio -->
-            <label for="dia-inicio-filter" class="title">Fecha de inicio:</label>
+            <label for="mes-inicio-filter" class="title">Fecha de inicio:</label>
             <div>
-                <input type="text" id="dia-inicio-filter" placeholder="Día" maxlength="2">
                 <input type="text" id="mes-inicio-filter" placeholder="Mes" maxlength="2">
                 <input type="text" id="ano-inicio-filter" placeholder="Año" maxlength="4">
             </div>
             <!-- Filtrado por fecha fin -->
-            <label for="dia-fin-filter" class="title">Fecha Fin:</label>
+            <label for="mes-fin-filter" class="title">Fecha Fin:</label>
             <div>
-                <input type="text" id="dia-fin-filter" placeholder="Dia">
                 <input type="text" id="mes-fin-filter" placeholder="Mes">
                 <input type="text" id="ano-fin-filter" placeholder="Año">
                 <select id="en-curso-filter">
@@ -149,9 +147,9 @@
                     <td>{{ forloop.counter }}</td>
                     <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}" class="checkbox" style="height: 20px; width: 20px;"></td>
                     <td>{{ contrato.codigo }}</td>
-                    <td>{{ contrato.fechaInicio }}</td>
+                    <td>{{ contrato.fechaInicio|date:"M. Y" }}</td>
                     <td>{% if contrato.fechaFin %}
-                            {{ contrato.fechaFin|date:"M. d, Y" }}
+                            {{ contrato.fechaFin|date:"M. Y" }}
                         {% else %}
                             En curso
                         {% endif %}
@@ -193,11 +191,11 @@
         const proyectoFilter = $("#proyecto-filter").val();
         const sectorFilter = $("#sector-filter").val();
         
-        const diaInicioFilter = $("#dia-inicio-filter").val();
+        const diaInicioFilter = "1";
         const mesInicioFilter = $("#mes-inicio-filter").val();
         const anoInicioFilter = $("#ano-inicio-filter").val();
 
-        const diaFinFilter = $("#dia-fin-filter").val();
+        const diaFinFilter = "1";
         const mesFinFilter = $("#mes-fin-filter").val();
         const anoFinFilter = $("#ano-fin-filter").val();
         const enCursoFilter = $("#en-curso-filter").val();
@@ -248,7 +246,7 @@
 
     // Función para verificar si una fecha de inicio coincide con los filtros de fecha de inicio
     function verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter) {
-        if (!diaInicioFilter && !mesInicioFilter && !anoInicioFilter) {
+        if (!mesInicioFilter && !anoInicioFilter) {
             return true;
         }
 
@@ -256,11 +254,6 @@
         const diaInicio = fechaInicioParts[0];
         const mesInicio = fechaInicioParts[1];
         const anoInicio = fechaInicioParts[2];
-        
-
-        if (diaInicioFilter && diaInicioFilter !== diaInicio) {
-            return false;
-        }
 
         if (mesInicioFilter && mesInicioFilter !== mesInicio) {
             return false;
@@ -279,7 +272,7 @@
             return fechaFin === "En curso";
         }
 
-        if (!diaFinFilter && !mesFinFilter && !anoFinFilter) {
+        if (!mesFinFilter && !anoFinFilter) {
             return true;
         }
 
@@ -291,13 +284,6 @@
         const diaFin = fechaFinParts[0];
         const mesFin = fechaFinParts[1];
         const anoFin = fechaFinParts[2];
-
-        console.log(diaFin);
-        console.log(fechaFin);
-
-        if (diaFinFilter && diaFinFilter !== diaFin) {
-            return false;
-        }
 
         if (mesFinFilter && mesFinFilter !== mesFin) {
             return false;
@@ -312,7 +298,7 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter, #reset-filters, #checkbox-filter").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #mes-inicio-filter, #ano-inicio-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter, #reset-filters, #checkbox-filter").on("keyup change", filtrarContratos);
 
     function exportarExcel(filasMarcadas) {
         const contratosFiltrados = [];
@@ -395,10 +381,8 @@
         function resetFilters(){
             // Establecer los valores de los elementos de entrada a sus valores predeterminados
             $("#codigo-filter").val("");
-            $("#dia-inicio-filter").val("");
             $("#mes-inicio-filter").val("");
             $("#ano-inicio-filter").val("");
-            $("#dia-fin-filter").val("");
             $("#mes-fin-filter").val("");
             $("#ano-fin-filter").val("");
             $("#en-curso-filter").val("");
