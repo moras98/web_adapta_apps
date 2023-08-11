@@ -80,8 +80,14 @@
                 </select>
             </div>
             <div style="margin-top: 10px;">
-                <button id="reset-filters">Reiniciar Filtros</button>
+                <label for="checkbox-filter" class="title">Filtrar por Checkbox:</label>
+                <select id="checkbox-filter">
+                    <option value="all">Todas</option>
+                    <option value="checked">Marcadas</option>
+                    <option value="unchecked">No Marcadas</option>
+                </select>
             </div>
+            <button id="reset-filters">Reiniciar Filtros</button>
         </div>
         <div class="experiencia-sub-section">
             <!-- Exportar a excel -->
@@ -141,7 +147,7 @@
                     data-empleados="{% for contrato_empleado in contrato.contratoempleado_set.all %}{{ contrato_empleado.empleado.nombre }} - {{ contrato_empleado.rol.nombre }}; {% endfor %}"
                 >
                     <td>{{ forloop.counter }}</td>
-                    <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}" style="height: 20px; width: 20px;"></td>
+                    <td><input type="checkbox" name="seleccionado" value="{{ contrato.codigo }}" class="checkbox" style="height: 20px; width: 20px;"></td>
                     <td>{{ contrato.codigo }}</td>
                     <td>{{ contrato.fechaInicio }}</td>
                     <td>{% if contrato.fechaFin %}
@@ -198,6 +204,8 @@
 
         const localizacionFilter = $("#localizacion-filter").val();
         const razonFilter = $("#razon-filter").val()
+        
+        const checkboxFilter = $("#checkbox-filter").val();
 
         $("#contratos-table tbody tr").each(function () {
             const $row = $(this);
@@ -210,6 +218,8 @@
             const sector = $row.data("sector");
             const localizacion = $row.data("localizaciones");
 
+            const isChecked = $row.find(".checkbox").prop("checked");
+
             // Verificar si el contrato coincide con los filtros seleccionados
             const codigoMatch = codigo.includes(codigoFilter);
             const catServiciosMatch = catServiciosFilter === "" || catServicios === catServiciosFilter;
@@ -220,8 +230,15 @@
             const fechaInicioMatch = verificarFechaInicio(fechaInicio, diaInicioFilter, mesInicioFilter, anoInicioFilter);
             const fechaFinMatch = verificarFechaFin(fechaFin, diaFinFilter, mesFinFilter, anoFinFilter, enCursoFilter);
 
+            let checkboxMatch = true;
+            if (checkboxFilter === "checked") {
+                checkboxMatch = isChecked;
+            } else if (checkboxFilter === "unchecked") {
+                checkboxMatch = !isChecked;
+            }
+
             // Ocultar o mostrar la fila según los filtros
-            if (codigoMatch && catServiciosMatch && sectorMatch && razonMatch && proyectoMatch && localizacionMatch && fechaInicioMatch && fechaFinMatch) {
+            if (codigoMatch && catServiciosMatch && sectorMatch && razonMatch && proyectoMatch && localizacionMatch && fechaInicioMatch && fechaFinMatch && checkboxMatch) {
                 $row.show();
             } else {
                 $row.hide();
@@ -295,7 +312,7 @@
 
     // Llamar a la función de filtrado al cargar la página y cuando cambien los filtros
     filtrarContratos();
-    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter, #reset-filters").on("keyup change", filtrarContratos);
+    $("#codigo-filter, #cat-servicios-filter, #proyecto-filter, #razon-filter, #localizacion-filter, #sector-filter, #dia-inicio-filter, #mes-inicio-filter, #ano-inicio-filter, #dia-fin-filter, #mes-fin-filter, #ano-fin-filter, #en-curso-filter, #reset-filters, #checkbox-filter").on("keyup change", filtrarContratos);
 
     function exportarExcel(filasMarcadas) {
         const contratosFiltrados = [];
@@ -374,8 +391,8 @@
         $("#deseleccionar-todos").click(function() {
             $("tr:visible input[type='checkbox']").prop("checked", false);
         });
-
-        $("#reset-filters").click(function() {
+        
+        function resetFilters(){
             // Establecer los valores de los elementos de entrada a sus valores predeterminados
             $("#codigo-filter").val("");
             $("#dia-inicio-filter").val("");
@@ -390,7 +407,11 @@
             $("#cat-servicios-filter").val("");
             $("#sector-filter").val("");
             $("#localizacion-filter").val("");
+            $("#checkbox-filter").val("all");
+        };
 
+        $("#reset-filters").click(function() {
+            resetFilters();
             filtrarContratos();
         });
     });
