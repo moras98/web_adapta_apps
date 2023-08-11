@@ -309,7 +309,7 @@ def eliminarFracciones(tiempo):
 
 def experienciaRazones(request):
     if request.user.is_authenticated:
-        razones = experienciaRazonSocial.objects.all()
+        razones = experienciaRazonSocial.objects.all().order_by("nombre")
         context = {'razones': razones}
         return render(request, './servicios_adapta_app/experiencia_razones.html', context)
     else:
@@ -347,8 +347,8 @@ def borrar_razon(request, razon_id):
     
 def experienciaProyectos(request):
     if request.user.is_authenticated:
-        proyectos = experienciaProyecto.objects.all()
-        razones = experienciaRazonSocial.objects.all()
+        proyectos = experienciaProyecto.objects.all().order_by("nombre")
+        razones = experienciaRazonSocial.objects.all().order_by("nombre")
         context = {'proyectos': proyectos, 'razones': razones}
         return render(request, './servicios_adapta_app/experiencia_proyectos.html', context)
     else:
@@ -379,8 +379,8 @@ def add_proyecto(request):
             return redirect('experiencia-proyectos')
         else:
             return render(request, './servicios_adapta_app/experiencia_proyectos_form.html', context={
-                'razones_sociales': experienciaRazonSocial.objects.all(),
-                'localizaciones': experienciaLocalizaciones.objects.all(),
+                'razones_sociales': experienciaRazonSocial.objects.all().order_by("nombre"),
+                'localizaciones': experienciaLocalizaciones.objects.all().order_by("departamento"),
                 'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES
             })
     else:
@@ -400,15 +400,15 @@ def borrar_proyecto(request, proyecto_id):
 
 def experienciaTabla(request):
     if request.user.is_authenticated:
-        contratos = experienciaContrato.objects.all()
+        contratos = experienciaContrato.objects.all().order_by('-fechaInicio')
 
         return render(request, './servicios_adapta_app/experiencia_table.html', context={
             'contratos': contratos, 
             'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
             'SECTOR_CHOICES': experienciaProyecto.SECTOR_CHOICES,
-            'proyectos': experienciaProyecto.objects.all(),
-            'razones': experienciaRazonSocial.objects.all(),
-            'localizaciones': experienciaLocalizaciones.objects.all()
+            'proyectos': experienciaProyecto.objects.all().order_by("nombre"),
+            'razones': experienciaRazonSocial.objects.all().order_by("nombre"),
+            'localizaciones': experienciaLocalizaciones.objects.all().order_by("departamento")
             })
     else:
         return redirect('login')
@@ -492,11 +492,11 @@ def add_contrato(request):
             return redirect('experiencia-tabla')
         else:
             return render(request, './servicios_adapta_app/experiencia_form.html', context={
-                'proyectos': experienciaProyecto.objects.all(),
+                'proyectos': experienciaProyecto.objects.all().order_by("nombre"),
                 'empleados': experienciaEmpleado.objects.all(),
                 'roles': experienciaRol.objects.all(),
                 'CAT_CHOICES': experienciaContrato.CAT_CHOICES,
-                'razones': experienciaRazonSocial.objects.all()
+                'razones': experienciaRazonSocial.objects.all().order_by("nombre")
             })
     else:
         return redirect('login')
@@ -504,7 +504,7 @@ def add_contrato(request):
 def editar_contrato(request, contrato_id):
     if request.user.is_authenticated:
         contrato = get_object_or_404(experienciaContrato, id=contrato_id)
-        proyectos_disponibles = experienciaProyecto.objects.all()  # Obtener los proyectos disponibles
+        proyectos_disponibles = experienciaProyecto.objects.all().order_by("nombre")  # Obtener los proyectos disponibles
         proyecto_actual = contrato.proyecto  # Obtener el proyecto actual del contrato
         empleados_disponibles = experienciaEmpleado.objects.all()  # Obtener todos los empleados disponibles
         roles_disponibles = experienciaRol.objects.all()  # Obtener todos los roles disponibles
@@ -612,7 +612,7 @@ def proyectos_filtrados(request):
     if request.method == 'GET' and 'razon_social_id' in request.GET:
         razon_social_id = request.GET['razon_social_id']
         # Filtrar los proyectos según la razón social seleccionada
-        proyectos_filtrados = experienciaProyecto.objects.filter(razon__id=razon_social_id).values('id', 'nombre')
+        proyectos_filtrados = experienciaProyecto.objects.filter(razon__id=razon_social_id).values('id', 'nombre').order_by("nombre")
         return JsonResponse(list(proyectos_filtrados), safe=False)
     else:
         return JsonResponse([], safe=False)
