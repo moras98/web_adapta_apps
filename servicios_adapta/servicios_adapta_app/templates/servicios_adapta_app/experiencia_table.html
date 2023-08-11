@@ -161,8 +161,8 @@
                     <td>{{ contrato.proyecto.get_sector_display }}</td>
                     <td>{{ contrato.proyecto.localizacion.all|join:', ' }}</td>
                     <td>{{ contrato.proyecto.contacto_nombre }}</td>
-                    <td>{{ contrato.proyecto.contacto_telefono }}</td>
-                    <td>{{ contrato.proyecto.contacto_mail }}</td>
+                    <td>{{ contrato.proyecto.contacto_telefono|default:"Sin telefono" }}</td>
+                    <td>{{ contrato.proyecto.contacto_mail|default:"Sin correo" }}</td>
                     <td><a href="{{ contrato.ficha }}" target="_blank">Ver Ficha</a></td>
                     <td><a href="{{ contrato.atestado }}" target="_blank">Ver Atestado</a></td>
                     <td>
