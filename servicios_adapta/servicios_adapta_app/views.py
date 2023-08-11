@@ -402,8 +402,6 @@ def borrar_proyecto(request, proyecto_id):
 def experienciaTabla(request):
     if request.user.is_authenticated:
         contratos = experienciaContrato.objects.all().order_by('-fechaInicio')
-        for contrato in contratos:
-            print(contrato.proyecto.contacto_nombre + contrato.proyecto.contacto_mail)
 
         return render(request, './servicios_adapta_app/experiencia_table.html', context={
             'contratos': contratos, 

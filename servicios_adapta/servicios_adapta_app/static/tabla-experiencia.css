@@ -72,3 +72,19 @@
     box-shadow: none;
     border-radius: none;
 }
+
+#reset-filters {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    background-color: green;
+    border-radius: 12px;
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.577);
+    padding: 10px;
+    transition: background-color .2s;
+}
+
+#reset-filters:hover {
+    color: black;
+    background-color: white;
+}
