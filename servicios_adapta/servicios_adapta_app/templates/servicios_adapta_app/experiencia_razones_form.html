@@ -9,18 +9,23 @@
     </div>
     <div class="container">
         <div class="left">
-            <h1>Razones Sociales</h1>
+            <h1>Clientes</h1>
             <div class="info">
                 <label class="title">Instrucciones</label>
                 <p>
-                    El nombre de la razón social debe ser úncio, prestar ateción si ya existe antes de intentar agregar uno nuevo.
+                    El nombre del cliente debe ser úncio, prestar ateción si ya existe antes de intentar agregar uno nuevo.
                 </p>
             </div>
         </div>
         <div class="right">
             <form method="POST">
                 {% csrf_token %}
-                <label for="nombre-razon" class="title">Nombre</label>
+                <label for="nombre-cliente" class="title">Nombre Cliente</label>
+                <br>
+                <input type="text" name="nombre-cliente" required>
+                <br>
+                <br>
+                <label for="nombre-razon" class="title">Razón Social</label>
                 <br>
                 <input type="text" name="nombre-razon" required>
                 <br>
