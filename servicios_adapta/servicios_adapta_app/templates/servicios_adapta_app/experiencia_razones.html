@@ -6,9 +6,9 @@
         <div class="div-atras">
             <a class="boton-atras" href="{% url 'menu-experiencia' %}"> <- Atrás</a>
         </div>
-        <h1 style="margin-bottom: 10px; margin-top: 0;">Razones Sociales</h1>
+        <h1 style="margin-bottom: 10px; margin-top: 0;">Clientes</h1>
         <div class="sub-section">
-            <a href="{% url 'experiencia-razones-agregar' %}" style="margin-bottom: 10px; max-width: 150px;">Agregar Razón Social</a>
+            <a href="{% url 'experiencia-razones-agregar' %}" style="margin-bottom: 10px; max-width: 150px;">Agregar Cliente</a>
         </div>
     </div>
     <div class="table-section">
@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th></th>
+                    <th>Cliente</th>
                     <th>Razón Social</th>
                     <th>Acciones</th>
                 </tr>
@@ -24,6 +25,7 @@
                 {% for razon in razones %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
+                    <td>----</td>
                     <td>{{ razon.nombre }}</td>
                     <td>
                         <form method="POST" action="{% url 'borrar_razon' razon.id %}">
